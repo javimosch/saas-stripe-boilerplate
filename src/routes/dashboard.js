@@ -222,7 +222,8 @@ router.get('/orders', authMiddleware.isAuthenticated, async (req, res) => {
       path: 'orders',
       populate: [
         { path: 'service' },
-        { path: 'subscription' }
+        { path: 'subscription' },
+        { path: 'pricingPlan' }
       ]
     });
     res.render('dashboard/orders', { ...global.getEjsData(), title: 'My Orders', orders: user.orders });
@@ -232,21 +233,25 @@ router.get('/orders', authMiddleware.isAuthenticated, async (req, res) => {
   }
 });
 
-/**
- * Get user tools (readonly view)
- */
 router.get('/tools', authMiddleware.isAuthenticated, async (req, res) => {
   try {
     const { Order, Tool } = global.getMongooseModels(['Order', 'Tool']);
+    const now = new Date();
 
     // Find all completed orders for the authenticated user
     const userOrders = await Order.find({ 
       user: req.user._id, 
       status: 'completed' 
-    }).populate('pricingPlan');
+    }).populate('pricingPlan subscription');
 
-    // Extract pricing plan IDs from the user's orders
-    const userPricingPlanIds = userOrders.map(order => order.pricingPlan._id);
+    // Extract pricing plan IDs from the user's valid orders
+    const userPricingPlanIds = userOrders.filter(order => {
+      // Include one-time payment orders (no subscription)
+      if (!order.subscription) return true;
+      
+      // Include subscription orders with endDate in the future
+      return order.subscription.endDate > now;
+    }).map(order => order.pricingPlan._id);
 
     // Find tools associated with the pricing plans the user has ordered
     const tools = await Tool.find({ 
@@ -270,23 +275,33 @@ router.get('/tools', authMiddleware.isAuthenticated, async (req, res) => {
 
 router.get('/tools/:id', authMiddleware.isAuthenticated, async (req, res) => {
   try {
-    const { Order, Tool } = global.getMongooseModels(['Order', 'Tool', 'PricingPlan']);
+    const { Order, Tool } = global.getMongooseModels(['Order', 'Tool']);
+    const now = new Date();
 
-        // Find all completed orders for the authenticated user
-        const userOrders = await Order.find({ user: req.user._id, status: 'completed' }).populate('pricingPlan');
+    // Find all completed orders for the authenticated user
+    const userOrders = await Order.find({ 
+      user: req.user._id, 
+      status: 'completed' 
+    }).populate('pricingPlan subscription');
 
-        // Extract pricing plan IDs from the user's orders
-        const userPricingPlanIds = userOrders.map(order => order.pricingPlan._id);
+    // Extract pricing plan IDs from the user's valid orders
+    const userPricingPlanIds = userOrders.filter(order => {
+      // Include one-time payment orders (no subscription)
+      if (!order.subscription) return true;
+      
+      // Include subscription orders with endDate in the future
+      return order.subscription.endDate > now;
+    }).map(order => order.pricingPlan._id);
 
-        // Find the tool by ID and ensure it is associated with one of the user's pricing plans
-        const tool = await Tool.findOne({
-            _id: req.params.id,
-            pricingPlans: { $in: userPricingPlanIds }
-        }).populate('pricingPlans');
+    // Find the tool by ID and ensure it is associated with one of the user's valid pricing plans
+    const tool = await Tool.findOne({
+      _id: req.params.id,
+      pricingPlans: { $in: userPricingPlanIds }
+    }).populate('pricingPlans');
 
-        if (!tool) {
-            return res.status(404).render('error', { ...global.getEjsData(), message: 'Tool not found or not accessible' });
-        }
+    if (!tool) {
+      return res.status(404).render('error', { ...global.getEjsData(), message: 'Tool not found or not accessible' });
+    }
 
     res.render('dashboard/tool', { ...global.getEjsData(), title: tool.name, tool });
   } catch (error) {

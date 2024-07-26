@@ -15,6 +15,8 @@
                 <thead>
                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         <th class="py-3 px-6 text-left">Order ID</th>
+                        <th class="py-3 px-6 text-left">Service</th>
+                        <th class="py-3 px-6 text-left">Pricing Plan</th>
                         <th class="py-3 px-6 text-left">Subscription</th>
                         <th class="py-3 px-6 text-left">Date</th>
                         <th class="py-3 px-6 text-left">Amount</th>
@@ -28,12 +30,18 @@
                                 <%= order._id %>
                             </td>
                             <td class="py-3 px-6 text-left">
+                                <%= order.service ? order.service.name : 'N/A' %>
+                            </td>
+                            <td class="py-3 px-6 text-left">
+                                <%= order.pricingPlan ? `${order.pricingPlan.name} - ${order.pricingPlan.billingCycle}` : 'N/A' %>
+                            </td>
+                            <td class="py-3 px-6 text-left">
                                 <% if (order.subscription) { %>
                                     <a href="/dashboard/subscription/<%= order.subscription._id %>" class="text-blue-600 hover:text-blue-800 underline">
-                                        <%= order.service.name %>
+                                        Yes - <%= order.subscription.status %>
                                     </a>
                                 <% } else { %>
-                                    <%= order.service ? order.service.name : 'N/A' %>
+                                    No
                                 <% } %>
                             </td>
                             <td class="py-3 px-6 text-left">
