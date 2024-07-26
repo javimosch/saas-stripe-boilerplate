@@ -1,0 +1,70 @@
+<%- include('../partials/layout-protected-top', { title: 'Orders' }) %>
+<script>
+    window.orders = []
+    <% orders.forEach(order => { %>
+        orders.push(JSON.parse(`<%= JSON.stringify(order) %>`.trim().replace(/&#34;/g, '"')));
+    <% }) %>
+    console.log({orders})
+</script>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-blue-600">My Orders</h1>
+    
+    <% if (orders && orders.length > 0) { %>
+        <div class="overflow-x-auto">
+            <table class="w-full bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Order ID</th>
+                        <th class="py-3 px-6 text-left">Subscription</th>
+                        <th class="py-3 px-6 text-left">Date</th>
+                        <th class="py-3 px-6 text-left">Amount</th>
+                        <th class="py-3 px-6 text-left">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 text-sm font-light">
+                    <% orders.forEach(order => { %>
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">
+                                <%= order._id %>
+                            </td>
+                            <td class="py-3 px-6 text-left">
+                                <% if (order.subscription) { %>
+                                    <a href="/dashboard/subscription/<%= order.subscription._id %>" class="text-blue-600 hover:text-blue-800 underline">
+                                        <%= order.service.name %>
+                                    </a>
+                                <% } else { %>
+                                    <%= order.service ? order.service.name : 'N/A' %>
+                                <% } %>
+                            </td>
+                            <td class="py-3 px-6 text-left">
+                                <%= order.createdAt.toLocaleDateString() %>
+                            </td>
+                            <td class="py-3 px-6 text-left">
+                                €<%= order.totalAmount.toFixed(2) %>
+                            </td>
+                            <td class="py-3 px-6 text-left">
+                                <span class="<%= order.status === 'completed' ? 'bg-green-200 text-green-600' : 'bg-yellow-200 text-yellow-600' %> py-1 px-3 rounded-full text-xs">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <p class="text-xl text-gray-600">You haven't placed any orders yet.</p>
+            <a href="/services" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                Browse Available Services
+            </a>
+        </div>
+    <% } %>
+
+    <div class="mt-8">
+        <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold">
+            &larr; Back to Dashboard
+        </a>
+    </div>
+</div>
+<%- include('../partials/layout-public-bottom') %>

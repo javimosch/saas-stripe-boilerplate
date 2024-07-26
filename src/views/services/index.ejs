@@ -1,0 +1,53 @@
+<%- include('../partials/layout', { title: 'Home' }) %>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>"><%= title %></h1>
+        <% if (services && services.length > 0) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% services.forEach(service => { %>
+                    <div class="bg-white shadow-md rounded-lg p-6">
+                        <h2 class="text-xl font-semibold mb-2"><%= service.name %></h2>
+                        <p class="text-gray-600 mb-4"><%= service.description %></p>
+                        <% if (service.pricingPlans && service.pricingPlans.length > 0) { %>
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">Pricing Plans:</h3>
+                                <ul class="list-disc pl-5">
+                                    <% service.pricingPlans.forEach(plan => { %>
+                                        <li class="text-gray-600">
+                                            €<%= plan.price.toFixed(2) %> / <%= plan.billingCycle %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <a href="/services/<%= service._id %>" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                                Learn More
+                            </a>
+                        <% } else { %>
+                            <p class="text-gray-600 mb-4">No pricing plans available, check back later</p>
+                        <% } %>
+                        
+                    </div>
+                <% }); %>
+            </div>
+            
+        <% } else { %>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <p class="text-xl text-gray-600">
+                    <%= __('services__no_services') %>
+                    </p>
+            </div>
+        <% } %>
+
+        <div class="mt-8">
+            
+            <% if (typeof user !== 'undefined' && user) { %>
+                <a href="/dashboard" class="<%=TW_LINK_TEXT_COLOR_CLASS%>font-semibold">
+                    &larr; Back to Dashboard
+                </a>
+            <% } else { %>
+                <!-- <a href="/" class="<%=TW_LINK_TEXT_COLOR_CLASS%>font-semibold">
+                    &larr; Back to Home
+                </a> -->
+            <% } %>
+        </div>
+    </div>
+<%- include('../partials/layout-public-bottom', { title: 'Home' }) %>

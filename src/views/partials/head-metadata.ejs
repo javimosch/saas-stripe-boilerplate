@@ -1,0 +1,93 @@
+<% if (typeof metadata !== 'undefined' && metadata.description) { %>
+  <meta name="description" content="<%= metadata.description %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.author) { %>
+  <meta name="author" content="<%= metadata.author %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.keywords) { %>
+  <meta name="keywords" content="<%= metadata.keywords.join(', ') %>">
+<% } %>
+
+<!-- Open Graph / Facebook -->
+<% if (typeof metadata !== 'undefined' && metadata.url) { %>
+  <meta property="og:url" content="<%= metadata.url %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.title) { %>
+  <meta property="og:title" content="<%= metadata.title %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.description) { %>
+  <meta property="og:description" content="<%= metadata.description %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.image) { %>
+  <meta property="og:image" content="<%= metadata.image %>">
+<% } %>
+
+<!-- Twitter -->
+<% if (typeof metadata !== 'undefined' && metadata.url) { %>
+  <meta property="twitter:url" content="<%= metadata.url %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.title) { %>
+  <meta property="twitter:title" content="<%= metadata.title %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.description) { %>
+  <meta property="twitter:description" content="<%= metadata.description %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.image) { %>
+  <meta property="twitter:image" content="<%= metadata.image %>">
+<% } %>
+
+<!-- Article-specific -->
+<% if (typeof metadata !== 'undefined' && metadata.publishedDate) { %>
+  <meta property="article:published_time" content="<%= metadata.publishedDate %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.modifiedDate) { %>
+  <meta property="article:modified_time" content="<%= metadata.modifiedDate %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.section) { %>
+  <meta property="article:section" content="<%= metadata.section %>">
+<% } %>
+
+<% if (typeof metadata !== 'undefined' && metadata.tags) { %>
+  <meta property="article:tag" content="<%= metadata.tags.join(', ') %>">
+<% } %>
+
+<!-- Structured Data / JSON-LD -->
+<% if (typeof metadata !== 'undefined' && metadata.title && metadata.image && metadata.author && metadata.publishedDate && metadata.modifiedDate) { %>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "<%= metadata.title %>",
+      "image": "<%= metadata.image %>",
+      "author": {
+        "@type": "Person",
+        "name": "<%= metadata.author %>"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Your Organization Name",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://yourdomain.com/logo.png"
+        }
+      },
+      "datePublished": "<%= metadata.publishedDate %>",
+      "dateModified": "<%= metadata.modifiedDate %>",
+      "description": "<%= metadata.description %>",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "<%= metadata.url %>"
+      }
+    }
+  </script>
+<% } %>

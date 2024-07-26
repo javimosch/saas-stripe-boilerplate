@@ -1,0 +1,40 @@
+<!--layout-public-top-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <% if (typeof title !== 'undefined') { %>
+        <title><%= title + ' | ' + brandName %></title>
+    <% }else{ %>
+        <title><%= brandName%></title>
+    <% } %>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <%- include('./head-metadata') %>
+    <%- include('./head-libs') %>
+
+
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold <%= TW_TEXT_COLOR_CLASS %>">
+                <a href="/"><%= brandName%></a>
+            </div>
+            <nav>
+                <!-- <a href="/" class="text-gray-700 hover:text-blue-600 px-3">Home</a>
+                <a href="/about" class="text-gray-700 hover:text-blue-600 px-3">About</a> -->
+                <a href="/services" class="text-gray-700 hover:text-blue-600 px-3">Services</a>
+                <!-- <a href="/blog" class="text-gray-700 hover:text-blue-600 px-3">Blog</a>
+                <a href="/contact" class="text-gray-700 hover:text-blue-600 px-3">Contact</a> -->
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <a href="/dashboard" class="<%= TW_BTN_CLASS%> font-bold py-2 px-4 rounded">Dashboard</a>
+                <% } else { %>
+                    <a href="/auth/login" class="<%= TW_BTN_CLASS%> font-bold py-2 px-4 rounded">Login</a>
+                <% } %>
+            </nav>
+        </div>
+    </header>

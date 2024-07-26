@@ -1,0 +1,35 @@
+<%- include('../../partials/layout-protected-top', { title: 'Manage Tools' }) %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6 text-blue-600">Manage Tools</h1>
+  
+  <a href="/admin/tools/new" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block">
+    Add New Tool
+  </a>
+
+  <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+    <thead class="bg-gray-200 text-gray-700">
+      <tr>
+        <th class="py-3 px-4 text-left">Name</th>
+        <th class="py-3 px-4 text-left">Subscription</th>
+        <th class="py-3 px-4 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% tools.forEach(tool => { %>
+        <tr class="border-b">
+          <td class="py-3 px-4"><%= tool.name %></td>
+          <td class="py-3 px-4"><%= tool.subscription ? tool.subscription.name : 'N/A' %></td>
+          <td class="py-3 px-4">
+            <a href="/admin/tools/<%= tool._id %>/edit" class="text-blue-500 hover:text-blue-700 mr-2">Edit</a>
+            <form action="/admin/tools/<%= tool._id %>/delete" method="POST" class="inline">
+              <button type="submit" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this tool?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../../partials/layout-public-bottom') %>

@@ -1,0 +1,24 @@
+<%- include('../partials/layout') %>
+    <div class="container mx-auto px-4 py-8">
+
+        <h1 class="text-4xl font-bold mb-6 text-blue-600">
+            <%= title %>
+        </h1>
+
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <ul>
+                <% articles.forEach(article=> { %>
+                    <li>
+                        <a href="/blog/<%= article.slug %>" class="text-4xl text-gray-800 hover:text-blue-800">
+                            <%= article.title %>
+                        </a>
+                        <p class="mt-2">
+                            <%= article.description %>
+                        </p>
+                        <small>Published on: <%= article.date %></small>
+                    </li>
+                    <% }); %>
+            </ul>
+        </section>
+    </div>
+    <%- include('../partials/layout-public-bottom') %>

@@ -1,0 +1,43 @@
+<%- include('../partials/layout-protected-top', { title: 'Orders' }) %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Admin Events</h1>
+
+  <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+    <thead class="bg-gray-200 text-gray-700">
+      <tr>
+        <th class="py-3 px-4 text-left">Type</th>
+        <th class="py-3 px-4 text-left">Message</th>
+        <th class="py-3 px-4 text-left">Timestamp</th>
+        <th class="py-3 px-4 text-left">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% events.forEach(event => { %>
+        <tr class="border-b">
+          <td class="py-3 px-4"><%= event.type %></td>
+          <td class="py-3 px-4"><%= event.message %></td>
+          <td class="py-3 px-4"><%= event.timestamp.toLocaleString() %></td>
+          <td class="py-3 px-4">
+            <pre class="text-xs"><%= JSON.stringify(event.details, null, 2) %></pre>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="mt-4 flex justify-between items-center">
+    <p>Total events: <%= totalEvents %></p>
+    <div>
+      <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage - 1 %>" class="bg-blue-500 text-white px-4 py-2 rounded">Previous</a>
+      <% } %>
+      <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage + 1 %>" class="bg-blue-500 text-white px-4 py-2 rounded">Next</a>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/layout-public-bottom') %>

@@ -1,0 +1,185 @@
+<%- include('../partials/layout-protected-top', { title: 'Manage Users' }) %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Manage Users</h1>
+
+  <!-- Search and filter options -->
+  <div class="mb-4">
+    <input type="text" id="userSearch" placeholder="Search users..." class="p-2 border rounded">
+    <select id="roleFilter" class="p-2 border rounded ml-2">
+      <option value="">All Roles</option>
+      <option value="admin">Admin</option>
+      <option value="client">Client</option>
+    </select>
+  </div>
+
+  <!-- User list table -->
+  <table class="w-full bg-white shadow-md rounded mb-4">
+    <thead>
+      <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+        <th class="py-3 px-6 text-left hidden">Username</th>
+        <th class="py-3 px-6 text-left">Email</th>
+        <th class="py-3 px-6 text-center">Role</th>
+        <th class="py-3 px-6 text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="text-gray-600 text-sm font-light">
+      <% users.forEach(user => { %>
+        <tr class="border-b border-gray-200 hover:bg-gray-100">
+          <td class="py-3 px-6 text-left hidden"><%= user.username %></td>
+          <td class="py-3 px-6 text-left"><%= user.email %></td>
+          <td class="py-3 px-6 text-center"><%= user.role %></td>
+          <td class="py-3 px-6 text-center">
+            <button onclick="editUser('<%= user._id %>')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">Edit</button>
+            <button onclick="deleteUser('<%= user._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">Delete</button>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="flex justify-between items-center">
+    <span>Showing 1-10 of 100 users</span>
+    <div>
+      <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+        Previous
+      </button>
+      <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+        Next
+      </button>
+    </div>
+  </div>
+
+
+
+  <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold block mt-8">
+    &larr; Back to Dashboard
+  </a>
+</div>
+
+
+
+<div id="editUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <h3 class="text-lg font-bold mb-4">Edit User</h3>
+      <form onsubmit="event.preventDefault(); updateUser();">
+        <input type="hidden" id="editUserId">
+        <div class="mb-4 hidden">
+          <label for="editUsername" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+          <input type="text" id="editUsername" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-4">
+          <label for="editEmail" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+          <input type="email" id="editEmail" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-4">
+          <label for="editRole" class="block text-gray-700 text-sm font-bold mb-2">Role</label>
+          <select id="editRole" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <option value="client">Client</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="flex items-center justify-between">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update</button>
+          <button type="button" onclick="document.getElementById('editUserModal').classList.add('hidden')" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+  // You can add JavaScript here for search, filter, and pagination functionality
+
+  function deleteUser(userId) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      fetch(`/admin/users/${userId}`, {
+        method: 'DELETE',
+        credentials: 'same-origin', // This ensures cookies are sent with the request
+        headers: {
+          'Content-Type': 'application/json',
+          // You might need to include a CSRF token here if your app uses CSRF protection
+          // 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Remove the user row from the table
+          document.querySelector(`tr[data-user-id="${userId}"]`).remove();
+        } else {
+          alert('Error deleting user: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the user.');
+      });
+    }
+  }
+
+  function editUser(userId) {
+    // Fetch user details
+    fetch(`/admin/users/${userId}`, {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(user => {
+      // Populate a form with user details
+      document.getElementById('editUserId').value = user._id;
+      document.getElementById('editUsername').value = user.username||"";
+      document.getElementById('editEmail').value = user.email;
+      document.getElementById('editRole').value = user.role;
+      
+      // Show the edit form modal
+      document.getElementById('editUserModal').classList.remove('hidden');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while fetching user details.');
+    });
+  }
+  
+  function updateUser() {
+    const userId = document.getElementById('editUserId').value;
+    const userData = {
+      username: document.getElementById('editUsername').value,
+      email: document.getElementById('editEmail').value,
+      role: document.getElementById('editRole').value
+    };
+  
+    fetch(`/admin/users/${userId}`, {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update the user row in the table
+        const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+        row.querySelector('td:nth-child(1)').textContent = userData.username||"";
+        row.querySelector('td:nth-child(2)').textContent = userData.email;
+        row.querySelector('td:nth-child(3)').textContent = userData.role;
+        
+        // Hide the edit form modal
+        document.getElementById('editUserModal').classList.add('hidden');
+      } else {
+        alert('Error updating user: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while updating the user.');
+    });
+  }
+</script>
+
+<%- include('../partials/layout-public-bottom') %>

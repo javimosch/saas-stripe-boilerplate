@@ -1,0 +1,34 @@
+<%- include('partials/layout', { title: 'Home' }) %>
+<div class="container mx-auto px-4 py-8">
+       
+
+<p class="text-xl mb-6"><%= __('Welcome') %> to Integreria, your partner in AI integration for SMEs in France.</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-3 text-blue-500">Our Services</h2>
+        <ul class="list-disc list-inside">
+            <li>AI Tools Integration</li>
+            <li>SaaS Solutions</li>
+            <li>On-Premises AI Implementation</li>
+            <li>AI Consulting for SMEs</li>
+        </ul>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-3 text-blue-500">Why Choose Us</h2>
+        <ul class="list-disc list-inside">
+            <li>Tailored Solutions for SMEs</li>
+            <li>Expertise in AI Integration</li>
+            <li>Flexible Deployment Options</li>
+            <li>Dedicated Support Team</li>
+        </ul>
+    </div>
+</div>
+
+<div class="mt-8">
+    <a href="/services" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        Explore Our Services
+    </a>
+</div>
+</div>
+<%- include('partials/layout-public-bottom', { title: 'Home' }) %>

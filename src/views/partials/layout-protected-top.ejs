@@ -1,0 +1,22 @@
+<!--layout-public-top-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | <%= brandName%></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <%- include('./head-libs') %>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold <%= TW_TEXT_COLOR_CLASS %>">
+                <a href="/"><%= brandName%></a>
+            </div>
+            <nav class="flex gap-3">
+                <a href="/dashboard" class="<%= TW_BTN_CLASS%> font-bold py-2 px-4 rounded">Dashboard</a>
+                <a href="/auth/logout" class="<%= TW_BTN_CLASS%> font-bold py-2 px-4 rounded">Logout</a>
+            </nav>
+        </div>
+    </header>

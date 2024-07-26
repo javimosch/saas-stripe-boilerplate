@@ -1,0 +1,94 @@
+<%- include('../partials/layout-protected-top', { title: 'Subscriptions' }) %>
+
+    <style scoped>
+        .toggle-checkbox:checked {
+            @apply: right-0 border-green-400;
+            right: 0;
+            border-color: #68D391;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            @apply: bg-green-400;
+            background-color: #68D391;
+        }
+    </style>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6 text-blue-600">My Subscriptions</h1>
+        
+        <div class="flex items-center mb-4">
+            <label for="showCancelled" class="mr-2">Show Cancelled Subscriptions</label>
+            <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                <input type="checkbox" name="showCancelled" id="showCancelled" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                <label for="showCancelled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+            </div>
+        </div>
+
+        <% if (subscriptions && subscriptions.length > 0) { %>
+            <div id="subscriptionGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% subscriptions.forEach(subscription => { %>
+                    <div class="bg-white shadow-md rounded-lg p-6" data-status="<%= subscription.status %>">
+                        <h2 class="text-xl font-semibold mb-2"><%= subscription.service.name %></h2>
+                        <p class="text-gray-600 mb-2">Type: <%= subscription.service.type %></p>
+                        <p class="text-gray-600 mb-2">Price: €<%= subscription.service.price.toFixed(2) %> / month</p>
+                        <p class="text-gray-600 mb-4">Start Date: <%= subscription.startDate.toLocaleDateString() %></p>
+                        <p class="text-gray-600 mb-4">End Date: <%= subscription.endDate.toLocaleDateString() %></p>
+
+                        <% if (subscription.status === 'cancelled') { %>
+                            <p class="text-orange-600 mb-4">Cancelled (No auto renew)</p>
+                        <% } else{%>
+                            <p class="text-yellow-600 mb-4">Active (Auto renew)</p>
+                        <% } %>
+
+                        <a href="/dashboard/subscription/<%= subscription._id %>" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                            Manage Subscription
+                        </a>
+                    </div>
+                <% }); %>
+
+                
+            </div>
+
+            <div class="bg-white shadow-md rounded-lg p-4 mt-8">
+                <a href="/services" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    Browse Available Services
+                </a>
+            </div>
+
+        <% } else { %>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <p class="text-xl text-gray-600">You don't have any active subscriptions.</p>
+                <a href="/services" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    Browse Available Services
+                </a>
+            </div>
+        <% } %>
+
+        <div class="mt-8">
+            <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold">
+                &larr; Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const showCancelledToggle = document.getElementById('showCancelled');
+            const subscriptionGrid = document.getElementById('subscriptionGrid');
+    
+            showCancelledToggle.addEventListener('change', function() {
+                const subscriptions = subscriptionGrid.querySelectorAll('[data-status]');
+                subscriptions.forEach(sub => {
+                    if (sub.dataset.status === 'cancelled') {
+                        sub.style.display = this.checked ? 'block' : 'none';
+                    }
+                });
+            });
+    
+            // Initially hide cancelled subscriptions
+            const cancelledSubscriptions = subscriptionGrid.querySelectorAll('[data-status="cancelled"]');
+            cancelledSubscriptions.forEach(sub => {
+                sub.style.display = 'none';
+            });
+        });
+    </script>
+
+    <%- include('../partials/layout-public-bottom') %>

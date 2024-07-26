@@ -1,0 +1,16 @@
+<%- include('../partials/layout-protected-top', { title: tool.name }) %>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6 text-blue-600"><%= tool.name %></h1>
+        
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <iframe srcdoc="<%= tool.html %>" frameborder="0" height="100%" style="min-height:100vh" class="h-full w-full"></iframe>
+          </div>
+        
+
+        <div class="mt-8">
+            <a href="/dashboard/ai-tools" class="text-blue-500 hover:text-blue-600 font-semibold">
+                &larr; Back to AI Tools
+            </a>
+        </div>
+    </div>
+<%- include('../partials/layout-public-bottom') %>

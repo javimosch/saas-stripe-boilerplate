@@ -1,0 +1,25 @@
+<%- include('partials/layout', { title: 'Error',brandName,TW_TEXT_COLOR_CLASS }) %>
+
+<div class="container mx-auto w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center py-8">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h1 class="text-3xl font-bold mb-4 text-red-600">Error</h1>
+        
+        <% if (typeof statusCode !== 'undefined') { %>
+            <p class="text-5xl font-bold text-gray-700 mb-4"><%= statusCode %></p>
+        <% } %>
+        
+        <p class="text-xl text-gray-700 mb-6"><%= message %></p>
+        
+        <% if (typeof error !== 'undefined' && process.env.NODE_ENV === 'development') { %>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
+                <pre class="text-sm text-gray-800 whitespace-pre-wrap"><%= error.stack %></pre>
+            </div>
+        <% } %>
+        
+        <a href="/" class="<%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Return to Home
+        </a>
+    </div>
+</div>
+
+<%- include('partials/layout-public-bottom') %>

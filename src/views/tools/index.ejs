@@ -1,0 +1,20 @@
+<%- include('../partials/layout-protected-top', { title: 'Tools' }) %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6 text-blue-600">Available Tools</h1>
+  
+  <% if (tools && tools.length > 0) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% tools.forEach(tool => { %>
+        <div class="bg-white shadow-md rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-2"><%= tool.name %></h2>
+          <a href="/tools/<%= tool._id %>" class="text-blue-500 hover:text-blue-700">View Tool</a>
+        </div>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <p class="text-gray-600">No tools available. Please check your subscriptions.</p>
+  <% } %>
+</div>
+
+<%- include('../partials/layout-public-bottom') %>

@@ -1,0 +1,109 @@
+<%- include('partials/layout', { title: title }) %>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-blue-600">Subscribe to <%= service.name %></h1>
+
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Service Details</h2>
+        <p class="text-gray-700 mb-4"><%= service.description %></p>
+    </div>
+
+    <% if (pricingPlan) { %>
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Selected Pricing Plan</h2>
+            <p class="text-gray-700 mb-2">Name: <%= pricingPlan.name %></p>
+            <p class="text-gray-700 mb-2">Price: €<%= pricingPlan.price.toFixed(2) %> / <%= pricingPlan.billingCycle %></p>
+            <ul class="list-disc list-inside text-gray-700 mb-4">
+                <% pricingPlan.features.forEach(feature => { %>
+                    <li><%- feature %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } else { %>
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Pricing Plans</h2>
+            <p class="text-gray-700 mb-4">No pricing plan selected. Please go back and select a pricing plan.</p>
+        </div>
+    <% } %>
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Confirm Subscription</h2>
+        <p class="mb-4">By clicking 'Subscribe', you'll be redirected to Stripe's secure checkout to complete your subscription to <%= service.name %>.</p>
+        <button id="subscribe-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center">
+            <span class="mr-2">Subscribe with Stripe</span>
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.479 9.883c-1.626-.604-2.512-1.067-2.512-1.803 0-.622.511-1.024 1.411-1.024 1.652 0 3.348.674 4.541 1.268l.674-4.158C16.047 3.546 14.267 3 12.181 3 8.274 3 5.762 5.076 5.762 8.141c0 3.697 2.826 5.273 5.652 6.339 1.626.604 2.171 1.024 2.171 1.685 0 .639-.545 1.067-1.516 1.067-1.203 0-3.476-.639-4.881-1.472l-.681 4.192C7.658 20.521 9.895 21 12.116 21c4.078 0 6.652-2.017 6.652-5.273-.007-3.697-2.833-5.265-5.289-5.844z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="mt-8">
+        <a href="/services/<%= service._id %>" class="text-blue-500 hover:text-blue-600 font-semibold">
+            &larr; Back to Service Details
+        </a>
+    </div>
+</div>
+
+<script>
+    const stripe = Stripe('pk_test_MDkxtBLcBpHwMCgkqX2dJHjO');
+    const subscribeButton = document.getElementById('subscribe-button');
+
+    subscribeButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        try {
+            const response = await fetch('/stripe/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    serviceId: '<%= service._id %>',
+                    pricingPlanId: '<%= pricingPlan ? pricingPlan._id : '' %>', // Pass pricingPlanId
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const session = await response.json();
+    
+            if (!session.id) {
+                throw new Error('Invalid session data received from server');
+            }
+    
+            const result = await stripe.redirectToCheckout({
+                sessionId: session.id,
+            });
+    
+            if (result.error) {
+                throw new Error(result.error.message);
+            }
+        } catch (error) {
+            console.error('Error during checkout process:', error);
+            // Display error to user using simple-notify
+            new Notify({
+                status: 'error',
+                title: 'Checkout Error',
+                text: 'An error occurred during the checkout process. Please try again later.',
+                effect: 'fade',
+                speed: 300,
+                customClass: null,
+                customIcon: null,
+                showIcon: true,
+                showCloseButton: true,
+                autoclose: false,
+                autotimeout: 3000,
+                gap: 20,
+                distance: 20,
+                type: 3,
+                position: 'x-center-bottom'
+            });
+        }
+    });
+</script>
+
+<%- include('partials/layout-public-bottom') %>
