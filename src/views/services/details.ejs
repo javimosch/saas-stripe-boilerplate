@@ -1,6 +1,6 @@
 <%- include('../partials/layout', { title: 'Home' }) %>
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6 text-blue-600"><%=service.name%></h1>
+        <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>"><%=service.name%></h1>
         
         <div class="bg-white shadow-md rounded-lg p-8 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -13,31 +13,31 @@
             </div>
             
             <div class="mt-8">
-                <h2 class="text-2xl font-semibold mb-4">Subscription Options</h2>
+                
                 <% if (user) { %>
-                    <% if (userSubscription) { %>
-                        <p class="text-green-600 font-semibold">You are currently subscribed to this service.</p>
-                        <p class="text-gray-600">Subscription expires on: <%= userSubscription.endDate.toLocaleDateString() %></p>
-                    <% } else if (!canSubscribe) { %>
-                        <p class="text-yellow-600 font-semibold">You have a subscription that includes this service, but it's not currently active.</p>
-                        <a href="/dashboard/subscriptions" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
-                            Manage Subscriptions
+                    <% if (!canSubscribe) { %>
+                        <p class="text-green-600 font-semibold">You already bought this service.</p>
+                        <a href="/dashboard/orders" class="mt-4 inline-block <%=TW_BTN_CLASS%> font-bold py-3 px-6 rounded-lg transition duration-300">
+                            Manage orders
                         </a>
                     <% } else { %>
-                        <p class="text-xl text-gray-600 mb-4">Choose a subscription plan:</p>
+                        <h2 class="text-2xl font-semibold mb-4">Pricing plans</h2>
+                        <p class="text-xl text-gray-600 mb-4">Choose a plan:</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <% service.pricingPlans.forEach(plan => { %>
                                 <div class="border rounded-lg p-4">
                                     <h3 class="text-lg font-semibold mb-2"><%= plan.name %></h3>
                                     <p class="text-gray-600 mb-2">€<%= plan.price.toFixed(2) %> / <%= plan.billingCycle %></p>
-                                    <ul class="list-disc list-inside text-sm text-gray-600 mb-4">
-                                        <% plan.features.forEach(feature => { %>
-                                            <li><%- feature %></li>
-                                        <% }) %>
-                                    </ul>
+                                    <% if (plan.features.filter(t=>!!t).length>0) {%>
+                                        <ul class="list-disc list-inside text-sm text-gray-600 mb-4">
+                                            <% plan.features.forEach(feature => { %>
+                                                <li><%- feature %></li>
+                                            <% }) %>
+                                        </ul>
+                                    <% } %>
                                     <a href="/subscribe/<%= service._id %>?pricingPlanId=<%= plan._id %>" 
-                                       class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
-                                        Subscribe to <%= plan.name %>
+                                       class="inline-block <%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded transition duration-300">
+                                        <%=plan.billingCycle==='one-time'?'Buy':'Subscribe to'%> <%= plan.name %>
                                     </a>
                                 </div>
                             <% }) %>
@@ -45,7 +45,7 @@
                     <% } %>
                 <% } else { %>
                     <p class="text-xl text-gray-600 mb-4">Please log in to view subscription options.</p>
-                    <a href="/auth/login" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                    <a href="/auth/login" class="inline-block <%=TW_BTN_CLASS%> font-bold py-3 px-6 rounded-lg transition duration-300">
                         Log In
                     </a>
                 <% } %>
@@ -56,7 +56,7 @@
 
 
         <div class="bg-white shadow-md rounded-lg p-8 mb-8">
-            <a href="/services" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            <a href="/services" class="inline-block mt-4 <%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded transition duration-300">
                 Browse other available Services
             </a>
         </div>
@@ -64,11 +64,11 @@
 
         <div class="mt-8">
             <% if (typeof user !== 'undefined' && user) { %>
-                <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold">
+                <a href="/dashboard" class="<%=TW_LINK_TEXT_COLOR_CLASS%> font-semibold">
                     &larr; Back to Dashboard
                 </a>
             <% } else { %>
-                <a href="/" class="text-blue-500 hover:text-blue-600 font-semibold">
+                <a href="/" class="<%=TW_LINK_TEXT_COLOR_CLASS%> font-semibold">
                     &larr; Back to Home
                 </a>
             <% } %>

@@ -236,14 +236,51 @@
           });
           if (response.ok) {
             fetchPricingPlans();
+            new Notify({
+              status: 'success',
+              title: 'Pricing Plan Deleted',
+              text: 'The pricing plan has been successfully deleted.',
+              effect: 'fade',
+              speed: 300,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              position: 'x-center-bottom'
+            });
+          } else if (response.status === 409) {
+            const errorData = await response.json();
+            new Notify({
+              status: 'error',
+              title: 'Cannot Delete Pricing Plan',
+              text: errorData.message || 'This pricing plan cannot be deleted due to existing constraints.',
+              effect: 'fade',
+              speed: 300,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: false,
+              position: 'x-center-bottom'
+            });
           } else {
-            console.error('Error deleting pricing plan');
+            throw new Error('Error deleting pricing plan');
           }
         } catch (error) {
           console.error('Error deleting pricing plan:', error);
+          new Notify({
+            status: 'error',
+            title: 'Error',
+            text: 'An unexpected error occurred while deleting the pricing plan.',
+            effect: 'fade',
+            speed: 300,
+            showIcon: true,
+            showCloseButton: true,
+            autoclose: false,
+            position: 'x-center-bottom'
+          });
         }
       }
     }
+    
     
     // Fetch services for dropdowns
     async function fetchServices() {

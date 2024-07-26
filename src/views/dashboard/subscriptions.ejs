@@ -12,7 +12,7 @@
         }
     </style>
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6 text-blue-600">My Subscriptions</h1>
+        <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>">My Subscriptions</h1>
         
         <div class="flex items-center mb-4">
             <label for="showCancelled" class="mr-2">Show Cancelled Subscriptions</label>
@@ -27,18 +27,19 @@
                 <% subscriptions.forEach(subscription => { %>
                     <div class="bg-white shadow-md rounded-lg p-6" data-status="<%= subscription.status %>">
                         <h2 class="text-xl font-semibold mb-2"><%= subscription.service.name %></h2>
-                        <p class="text-gray-600 mb-2">Type: <%= subscription.service.type %></p>
-                        <p class="text-gray-600 mb-2">Price: €<%= subscription.service.price.toFixed(2) %> / month</p>
+                        <!-- <p class="text-gray-600 mb-2">Type: <%= subscription.service %></p>
+                        <p class="text-gray-600 mb-2">Price: €<%= subscription.service %> / month</p>
+                        -->
                         <p class="text-gray-600 mb-4">Start Date: <%= subscription.startDate.toLocaleDateString() %></p>
                         <p class="text-gray-600 mb-4">End Date: <%= subscription.endDate.toLocaleDateString() %></p>
-
+ 
                         <% if (subscription.status === 'cancelled') { %>
                             <p class="text-orange-600 mb-4">Cancelled (No auto renew)</p>
                         <% } else{%>
                             <p class="text-yellow-600 mb-4">Active (Auto renew)</p>
                         <% } %>
 
-                        <a href="/dashboard/subscription/<%= subscription._id %>" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                        <a href="/dashboard/subscription/<%= subscription._id %>" class="<%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded transition duration-300">
                             Manage Subscription
                         </a>
                     </div>
@@ -48,7 +49,7 @@
             </div>
 
             <div class="bg-white shadow-md rounded-lg p-4 mt-8">
-                <a href="/services" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                <a href="/services" class="inline-block <%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded transition duration-300">
                     Browse Available Services
                 </a>
             </div>
@@ -56,14 +57,14 @@
         <% } else { %>
             <div class="bg-white shadow-md rounded-lg p-6">
                 <p class="text-xl text-gray-600">You don't have any active subscriptions.</p>
-                <a href="/services" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                <a href="/services" class="inline-block mt-4 <%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded transition duration-300">
                     Browse Available Services
                 </a>
             </div>
         <% } %>
 
         <div class="mt-8">
-            <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold">
+            <a href="/dashboard" class="<%=TW_LINK_TEXT_COLOR_CLASS%> font-semibold">
                 &larr; Back to Dashboard
             </a>
         </div>

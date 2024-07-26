@@ -14,7 +14,8 @@ router.get('/manage-pricing-plans', (req, res) => {
   res.render('admin/pricing-plans', { ...global.getEjsData(),title: 'Manage Plans' });
 });
 
-require('./admin/admin-tools')(router)
+router.use('/',require('./admin/admin-tools'))
+
 require('./admin/admin-events')(router)
 require('./admin/admin-orders')(router)
 

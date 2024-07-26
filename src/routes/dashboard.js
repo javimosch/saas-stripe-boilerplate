@@ -165,6 +165,8 @@ router.get('/subscription/:id', async (req, res) => {
       .populate('service')
       .exec();
 
+    await global.syncStripeSubscriptionWithSubscription(subscription)
+
     if (!subscription) {
       return res.status(404).render('error', { ...global.getEjsData(), message: 'Subscription not found' });
     }
@@ -197,11 +199,12 @@ router.post('/subscription/:id/cancel', async (req, res) => {
       return res.status(400).render('error', { ...global.getEjsData(), message: 'Subscription is not active' });
     }
 
+
     subscription.status = 'cancelled';
-    // You might want to set an end date here, e.g., end of the current billing period
-    // subscription.endDate = ... 
 
     await subscription.save();
+
+    await global.syncStripeSubscriptionWithSubscription(subscription)
 
     res.redirect(`/dashboard/subscription/${subscription._id}`);
   } catch (error) {
@@ -229,35 +232,61 @@ router.get('/orders', authMiddleware.isAuthenticated, async (req, res) => {
   }
 });
 
-// Get AI tools for the user
-router.get('/ai-tools', authMiddleware.isAuthenticated, async (req, res) => {
+/**
+ * Get user tools (readonly view)
+ */
+router.get('/tools', authMiddleware.isAuthenticated, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('subscriptions');
-    const userSubscriptionIds = user.subscriptions.map(sub => sub._id);
+    const { Order, Tool } = global.getMongooseModels(['Order', 'Tool']);
 
-    const tools = await Tool.find({ subscription: { $in: userSubscriptionIds } })
-      .populate('subscription');
+    // Find all completed orders for the authenticated user
+    const userOrders = await Order.find({ 
+      user: req.user._id, 
+      status: 'completed' 
+    }).populate('pricingPlan');
 
-    res.render('dashboard/ai-tools', { ...global.getEjsData(), title: 'AI Tools', tools });
+    // Extract pricing plan IDs from the user's orders
+    const userPricingPlanIds = userOrders.map(order => order.pricingPlan._id);
+
+    // Find tools associated with the pricing plans the user has ordered
+    const tools = await Tool.find({ 
+      pricingPlans: { $in: userPricingPlanIds } 
+    }).populate('pricingPlans');
+
+    res.render('dashboard/tools', { 
+      ...global.getEjsData(), 
+      title: 'AI Tools', 
+      tools 
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).render('error', { ...global.getEjsData(), message: 'Server error' });
+    res.status(500).render('error', { 
+      ...global.getEjsData(), 
+      message: 'Server error' 
+    });
   }
 });
 
+
 router.get('/tools/:id', authMiddleware.isAuthenticated, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('subscriptions');
-    const userSubscriptionIds = user.subscriptions.map(sub => sub._id);
+    const { Order, Tool } = global.getMongooseModels(['Order', 'Tool', 'PricingPlan']);
 
-    const tool = await Tool.findOne({
-      _id: req.params.id,
-      subscription: { $in: userSubscriptionIds }
-    }).populate('subscription');
+        // Find all completed orders for the authenticated user
+        const userOrders = await Order.find({ user: req.user._id, status: 'completed' }).populate('pricingPlan');
 
-    if (!tool) {
-      return res.status(404).render('error', { ...global.getEjsData(), message: 'Tool not found or not accessible' });
-    }
+        // Extract pricing plan IDs from the user's orders
+        const userPricingPlanIds = userOrders.map(order => order.pricingPlan._id);
+
+        // Find the tool by ID and ensure it is associated with one of the user's pricing plans
+        const tool = await Tool.findOne({
+            _id: req.params.id,
+            pricingPlans: { $in: userPricingPlanIds }
+        }).populate('pricingPlans');
+
+        if (!tool) {
+            return res.status(404).render('error', { ...global.getEjsData(), message: 'Tool not found or not accessible' });
+        }
 
     res.render('dashboard/tool', { ...global.getEjsData(), title: tool.name, tool });
   } catch (error) {

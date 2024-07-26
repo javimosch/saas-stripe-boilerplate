@@ -1,4 +1,5 @@
 {
 	"Welcome": "Bienvenu",
-	"services__no_services": "Aucun service n'est actuellement disponible"
+	"services__no_services": "Aucun service n'est actuellement disponible",
+	"dashboard_home__welcome": "Bienvenu to Your Dashboard"
 }

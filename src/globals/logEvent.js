@@ -9,6 +9,9 @@ async function logEvent(type, message, details = {}) {
       details
     });
     await event.save();
+    console.log('logEvent',type, {
+      message,details
+    })
   } catch (error) {
     console.error('Error logging event:', error);
   }

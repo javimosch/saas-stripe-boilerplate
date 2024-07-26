@@ -8,6 +8,8 @@ const {logEvent} = require('../helpers/event');
 router.use(authMiddleware.canBeAuthenticated)
 router.use(authMiddleware.isAuthenticated)
 
+global.stripe = stripe
+
 router.post('/create-checkout-session', async (req, res) => {
     try {
         const { serviceId, pricingPlanId } = req.body;

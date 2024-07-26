@@ -47,6 +47,9 @@ module.exports = function (modelName, options = {}) {
   // POST /
   router.post('/', async (req, res) => {
     try {
+      if(options.parse){
+        await options.parse(req)
+      }
       const newItem = new Model(req.body);
       await newItem.save();
       if (options.after) {
@@ -54,6 +57,11 @@ module.exports = function (modelName, options = {}) {
       }
       res.json({ success: true, item: newItem });
     } catch (error) {
+      await logEvent('error', 'Error adding item', {
+        modelName,
+        body:req.body,
+        error
+      });
       res.status(500).json({ success: false, message: 'Error adding item' });
     }
   });
@@ -61,6 +69,9 @@ module.exports = function (modelName, options = {}) {
   // PUT /:id - Update an item by ID
   router.put('/:id', async (req, res) => {
     try {
+      if(options.parse){
+        await options.parse(req)
+      }
       const updatedItem = await Model.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
       if (!updatedItem) {
         return res.status(404).json({ success: false, message: 'Item not found' });
@@ -77,6 +88,17 @@ module.exports = function (modelName, options = {}) {
   // DELETE /:id
   router.delete('/:id', async (req, res) => {
     try {
+
+      if (options.deleteConstraintCheck) {
+        const canDelete = await options.deleteConstraintCheck(req, Model);
+        if (!canDelete) {
+          return res.status(409).json({ 
+            success: false, 
+            message: 'Cannot delete item due to existing constraints'
+          });
+        }
+      }
+
       const deletedItem = await Model.findByIdAndDelete(req.params.id);
       if (!deletedItem) {
         return res.status(404).json({ success: false, message: 'Item not found' });

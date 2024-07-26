@@ -1,0 +1,39 @@
+<%- include('../partials/layout-protected-top', { title: 'My tools' }) %>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>">My tools</h1>
+        
+        <% if (tools && tools.length > 0) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% tools.forEach(tool => { %>
+                    <div class="bg-white shadow-md rounded-lg p-6">
+                        <h2 class="text-xl font-semibold mb-2"><%= tool.name %></h2>
+                        <p class="text-sm text-gray-500 mb-4"><%= tool.description %></p>
+                        <% if (tool.renderMode === 'inline') { %>
+                            <a href="/dashboard/tools/<%= tool._id %>" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                                Use Tool
+                            </a>
+                        <% } else if (tool.renderMode === 'external') { %>
+                            <a href="<%= tool.externalUrl %>" target="_blank" rel="noopener noreferrer" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                                Open External Tool
+                            </a>
+                        <% } else if (tool.renderMode === 'download') { %>
+                            <a href="<%= tool.downloadUrl %>" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                                Download Tool
+                            </a>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <p class="text-xl text-gray-600">No tools are currently available for your purchases.</p>
+            </div>
+        <% } %>
+
+        <div class="mt-8">
+            <a href="/dashboard" class="<%=TW_LINK_TEXT_COLOR_CLASS%> font-semibold">
+                &larr; Back to Dashboard
+            </a>
+        </div>
+    </div>
+<%- include('../partials/layout-public-bottom') %>

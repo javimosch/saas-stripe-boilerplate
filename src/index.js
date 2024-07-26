@@ -36,14 +36,36 @@ app.use('/contact', require('./routes/contact'));
 app.use('/dashboard', require('./routes/dashboard'));
 app.use('/profile', require('./routes/profile'));
 app.use('/admin', require('./routes/admin'));
-app.use('/tools', require('./routes/tools'));
 app.use('/blog', require('./routes/blog'));
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/services', require('./routes/services-apis'));
-app.use('/api/pricing-plans',global.setupMongooseCrudRoutes('PricingPlan',{
-    after: global.associatePricingPlanToService
+/**
+ * Private APIs
+ */
+const authM = require('./middleware/auth');
+app.use('/api', authM.canBeAuthenticated)
+app.use('/api/tools', authM.isAdmin, global.setupMongooseCrudRoutes('Tool', {
+    parse: req => {
+        const mongoose = require('mongoose')
+        // Parse the pricingPlans field if it exists
+        if (req.body.pricingPlans) {
+            req.body.pricingPlans = JSON.parse(req.body.pricingPlans)//.map(id => mongoose.Types.ObjectId(id));
+        }
+    }
 }))
+app.use('/api/pricing-plans', authM.isAdmin, global.setupMongooseCrudRoutes('PricingPlan', {
+    after: global.associatePricingPlanToService,
+    deleteConstraintCheck: global.pricingPlanDeleteConstraintCheck
+}))
+app.use('/api/services', authM.isAdmin, global.setupMongooseCrudRoutes('Service', {
+    deleteConstraintCheck: global.serviceDeleteConstraintCheck
+}))
+
+/**
+ * Public APIs
+ */
+app.use('/api/auth', require('./routes/auth'));
+
+
 
 const PORT = process.env.PORT || 3000;
 

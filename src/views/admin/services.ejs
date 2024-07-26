@@ -177,14 +177,62 @@ async function deleteService(serviceId) {
       });
       if (response.ok) {
         fetchServices();
+        new Notify({
+          status: 'success',
+          title: 'Service Deleted',
+          text: 'The service has been successfully deleted.',
+          effect: 'fade',
+          speed: 300,
+          showIcon: true,
+          showCloseButton: true,
+          autoclose: true,
+          autotimeout: 3000,
+          gap: 20,
+          distance: 20,
+          type: 1,
+          position: 'x-center-bottom'
+        });
+      } else if (response.status === 409) {
+        const errorData = await response.json();
+        new Notify({
+          status: 'error',
+          title: 'Cannot Delete Service',
+          text: errorData.message || 'This service cannot be deleted due to existing constraints.',
+          effect: 'fade',
+          speed: 300,
+          showIcon: true,
+          showCloseButton: true,
+          autoclose: false,
+          autotimeout: 3000,
+          gap: 20,
+          distance: 20,
+          type: 3,
+          position: 'x-center-bottom'
+        });
       } else {
-        console.error('Error deleting service');
+        throw new Error('Error deleting service');
       }
     } catch (error) {
       console.error('Error deleting service:', error);
+      new Notify({
+        status: 'error',
+        title: 'Error',
+        text: 'An unexpected error occurred while deleting the service.',
+        effect: 'fade',
+        speed: 300,
+        showIcon: true,
+        showCloseButton: true,
+        autoclose: false,
+        autotimeout: 3000,
+        gap: 20,
+        distance: 20,
+        type: 3,
+        position: 'x-center-bottom'
+      });
     }
   }
 }
+
 
 // Initial load
 document.addEventListener('DOMContentLoaded', fetchServices);

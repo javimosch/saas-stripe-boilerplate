@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Service = require('../models/Service');
 const authMiddleware = require('../middleware/auth');
-const Subscription = require('../models/Subscription'); // Make sure to import the Subscription model
+
 
 // List all services
 router.get('/', authMiddleware.canBeAuthenticated, async (req, res) => {
+  const {Service} = global.getMongooseModels(['Service'])
   try {
     const services = await Service.find().populate('pricingPlans');
     console.log({
@@ -23,32 +23,30 @@ router.get('/', authMiddleware.canBeAuthenticated, async (req, res) => {
 // Display a specific service
 router.get('/:id', authMiddleware.canBeAuthenticated, async (req, res) => {
   try {
+    const {Service, Order} = global.getMongooseModels(['Service','Order'])
     const service = await Service.findById(req.params.id).populate('pricingPlans');
     if (!service) {
       return res.status(404).render('error', {...global.getEjsData(), message: 'Service not found' });
     }
 
-    let userSubscription = null;
+    let userOrder = null;
     let canSubscribe = true;
 
     if (req.user) {
-      // Check if the user has any active subscription that includes this service
-      userSubscription = await Subscription.findOne({
+      // Check if the user has any order that includes this service
+      userOrder = await Order.findOne({
         user: req.user._id,
         service: service._id,
-        status: 'active'
-      });
+        status: 'completed'
+      }).populate('subscription').populate('pricingPlan');
 
-      if (userSubscription) {
-        canSubscribe = false;
-      } else {
-        // Check if the user has any subscription that includes this service
-        const existingSubscription = await Subscription.findOne({
-          user: req.user._id,
-          service: service._id
-        });
-        if (existingSubscription) {
-          canSubscribe = false;
+      if (userOrder) {
+        if (userOrder.subscription) {
+          // If there's an associated subscription, check if it's active
+          canSubscribe = userOrder.subscription.status !== 'active';
+        } else {
+          // If there's no subscription, check if the pricing plan was one-time
+          canSubscribe = userOrder.pricingPlan.billingCycle !== 'one-time';
         }
       }
     }
@@ -57,14 +55,15 @@ router.get('/:id', authMiddleware.canBeAuthenticated, async (req, res) => {
       ...global.getEjsData(),
       title: service.name, 
       service, 
-      userSubscription, 
+      userOrder, 
       canSubscribe,
       user: req.user || null 
     });
   } catch (error) {
     console.error(error);
-    res.status(500).render('error', { ...global.getEjsData(),message: 'Error fetching service' });
+    res.status(500).render('error', { ...global.getEjsData(), message: 'Error fetching service' });
   }
 });
+
 
 module.exports = router;
