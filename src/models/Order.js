@@ -10,7 +10,12 @@ const OrderSchema = new mongoose.Schema({
   totalAmount: { type: Number, required: true },
   status: { type: String, required: true },
   subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
-  stripeMetadata: { type: Object }
+  stripeMetadata: { type: Object },
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true
+  }
 }, {
   timestamps: true // Add timestamps here
 });

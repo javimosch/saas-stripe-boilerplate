@@ -19,11 +19,16 @@ router.use('/',require('./admin/admin-tools'))
 require('./admin/admin-events')(router)
 require('./admin/admin-orders')(router)
 
+
+
+router.use('/', require('./admin/admin-orgs')); // Add this line
+
 // GET /admin/users
 router.get('/users', async (req, res) => {
   try {
-    const users = await User.find({}).select('username email role');
-    res.render('admin/users', { ...global.getEjsData(),title: 'Manage Users', users });
+    const filter = req.user.role === 'super_admin' ? {} : { organization: req.user.organization };
+    const users = await User.find(filter).select('username email role organization');
+    res.render('admin/users', { ...global.getEjsData(), title: 'Manage Users', users });
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).render('error', {...global.getEjsData(), message: 'Error fetching users' });
@@ -98,8 +103,9 @@ router.put('/users/:id', async (req, res) => {
 // GET /admin/services
 router.get('/manage-services', async (req, res) => {
   try {
-    const services = await Service.find();
-    res.render('admin/services', { ...global.getEjsData(),title: 'Services',services });
+    const filter = req.user.role === 'super_admin' ? {} : { organization: req.user.organization };
+    const services = await Service.find(filter);
+    res.render('admin/services', { ...global.getEjsData(), title: 'Services', services });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching services' });
   }

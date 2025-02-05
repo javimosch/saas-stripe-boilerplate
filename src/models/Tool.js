@@ -32,7 +32,12 @@ const ToolSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PricingPlan',
     required: true
-  }]
+  }],
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true
+  }
 }, {
   timestamps: true
 });

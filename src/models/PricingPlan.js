@@ -25,6 +25,11 @@ const PricingPlanSchema = new mongoose.Schema({
     required: true
   },
   features: [String],
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

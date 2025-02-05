@@ -41,6 +41,11 @@ const SubscriptionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
     enum: ['active', 'cancelled', 'expired'],
     default: 'active'
+  },
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true
   }
 });
 

@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <% if (typeof title !== 'undefined') { %>
-        <title><%= title + ' | ' + brandName %></title>
+        <title><%= title + ' | ' + (typeof brandName !== 'undefined' ? brandName : '') %></title>
     <% }else{ %>
-        <title><%= brandName%></title>
+        <title><%= typeof brandName !== 'undefined' ? brandName : '' %></title>
     <% } %>
 
     <script src="https://cdn.tailwindcss.com"></script>

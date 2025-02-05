@@ -1,15 +1,15 @@
-<%- include('../partials/layout-protected-top', { title: 'Orders' }) %>
+<%- include('../partials/layout-protected-top', { title: __('admin_events__title') }) %>
 
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Admin Events</h1>
+  <h1 class="text-3xl font-bold mb-6"><%= __('admin_events__heading') %></h1>
 
   <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
     <thead class="bg-gray-200 text-gray-700">
       <tr>
-        <th class="py-3 px-4 text-left">Type</th>
-        <th class="py-3 px-4 text-left">Message</th>
-        <th class="py-3 px-4 text-left">Timestamp</th>
-        <th class="py-3 px-4 text-left">Details</th>
+        <th class="py-3 px-4 text-left"><%= __('admin_events__type') %></th>
+        <th class="py-3 px-4 text-left"><%= __('admin_events__message') %></th>
+        <th class="py-3 px-4 text-left"><%= __('admin_events__timestamp') %></th>
+        <th class="py-3 px-4 text-left"><%= __('admin_events__details') %></th>
       </tr>
     </thead>
     <tbody>
@@ -28,13 +28,13 @@
 
   <!-- Pagination -->
   <div class="mt-4 flex justify-between items-center">
-    <p>Total events: <%= totalEvents %></p>
+    <p><%= __('admin_events__total_events', { total: totalEvents }) %></p>
     <div>
       <% if (currentPage > 1) { %>
-        <a href="?page=<%= currentPage - 1 %>" class="bg-blue-500 text-white px-4 py-2 rounded">Previous</a>
+        <a href="?page=<%= currentPage - 1 %>" class="bg-blue-500 text-white px-4 py-2 rounded"><%= __('admin_events__previous') %></a>
       <% } %>
       <% if (currentPage < totalPages) { %>
-        <a href="?page=<%= currentPage + 1 %>" class="bg-blue-500 text-white px-4 py-2 rounded">Next</a>
+        <a href="?page=<%= currentPage + 1 %>" class="bg-blue-500 text-white px-4 py-2 rounded"><%= __('admin_events__next') %></a>
       <% } %>
     </div>
   </div>

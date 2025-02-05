@@ -1,13 +1,13 @@
-<%- include('../partials/layout') %>
+<%- include('../partials/layout', { title: __('blog_index__title') }) %>
     <div class="container mx-auto px-4 py-8">
 
         <h1 class="text-4xl font-bold mb-6 text-blue-600">
-            <%= title %>
+            <%= __('blog_index__heading') %>
         </h1>
 
         <section class="bg-white p-6 rounded-lg shadow-md mb-8">
             <ul>
-                <% articles.forEach(article=> { %>
+                <% articles.forEach(article => { %>
                     <li>
                         <a href="/blog/<%= article.slug %>" class="text-4xl text-gray-800 hover:text-blue-800">
                             <%= article.title %>
@@ -15,9 +15,9 @@
                         <p class="mt-2">
                             <%= article.description %>
                         </p>
-                        <small>Published on: <%= article.date %></small>
+                        <small><%= __('blog_index__published_on') %>: <%= article.date %></small>
                     </li>
-                    <% }); %>
+                <% }); %>
             </ul>
         </section>
     </div>

@@ -1,59 +1,59 @@
-<%- include('../partials/layout-protected-top', { title: 'Manage Pricing Plans' }) %>
+<%- include('../partials/layout-protected-top', { title: __('admin_pricing_plans__title') }) %>
 
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Manage Pricing Plans</h1>
+    <h1 class="text-3xl font-bold mb-6"><%= __('admin_pricing_plans__heading') %></h1>
   
     <!-- Add New Pricing Plan Form -->
     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <h2 class="text-2xl font-bold mb-4">Add New Pricing Plan</h2>
+      <h2 class="text-2xl font-bold mb-4"><%= __('admin_pricing_plans__add_new') %></h2>
       <form id="addPricingPlanForm" onsubmit="event.preventDefault(); addPricingPlan();">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="planName">
-            Plan Name
+            <%= __('admin_pricing_plans__plan_name') %>
           </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planName" name="name" type="text" placeholder="Enter plan name" required>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planName" name="name" type="text" placeholder="<%= __('admin_pricing_plans__plan_name_placeholder') %>" required>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="planService">
-            Service
+            <%= __('admin_pricing_plans__service') %>
           </label>
           <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planService" name="service" required>
-            <option value="">Select service</option>
+            <option value=""><%= __('admin_pricing_plans__select_service') %></option>
             <!-- Populate this with available services -->
           </select>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="planDescription">
-            Description
+            <%= __('admin_pricing_plans__description') %>
           </label>
-          <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planDescription" name="description" placeholder="Enter plan description" required></textarea>
+          <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planDescription" name="description" placeholder="<%= __('admin_pricing_plans__description_placeholder') %>" required></textarea>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="planPrice">
-            Price
+            <%= __('admin_pricing_plans__price') %>
           </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planPrice" name="price" type="number" step="0.01" placeholder="Enter plan price" required>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planPrice" name="price" type="number" step="0.01" placeholder="<%= __('admin_pricing_plans__price_placeholder') %>" required>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="planBillingCycle">
-            Billing Cycle
+            <%= __('admin_pricing_plans__billing_cycle') %>
           </label>
           <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planBillingCycle" name="billingCycle" required>
-            <option value="">Select billing cycle</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-            <option value="one-time">One-time</option>
+            <option value=""><%= __('admin_pricing_plans__select_billing_cycle') %></option>
+            <option value="monthly"><%= __('admin_pricing_plans__monthly') %></option>
+            <option value="yearly"><%= __('admin_pricing_plans__yearly') %></option>
+            <option value="one-time"><%= __('admin_pricing_plans__one_time') %></option>
           </select>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="planFeatures">
-            Features (comma-separated)
+            <%= __('admin_pricing_plans__features') %>
           </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planFeatures" name="features" type="text" placeholder="Feature 1, Feature 2, Feature 3">
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="planFeatures" name="features" type="text" placeholder="<%= __('admin_pricing_plans__features_placeholder') %>">
         </div>
         <div class="flex items-center justify-between">
           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-            Add Pricing Plan
+            <%= __('admin_pricing_plans__add_button') %>
           </button>
         </div>
       </form>
@@ -62,42 +62,42 @@
     <!-- Edit Pricing Plan Modal -->
     <div id="editPricingPlanModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
       <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <h3 class="text-lg font-bold mb-4">Edit Pricing Plan</h3>
+        <h3 class="text-lg font-bold mb-4"><%= __('admin_pricing_plans__edit_modal_title') %></h3>
         <form id="editPricingPlanForm" onsubmit="event.preventDefault(); updatePricingPlan();">
           <input type="hidden" id="editPlanId" name="_id">
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanName">Name</label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanName"><%= __('admin_pricing_plans__plan_name') %></label>
             <input type="text" id="editPlanName" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanService">Service</label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanService"><%= __('admin_pricing_plans__service') %></label>
             <select id="editPlanService" name="service" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
               <!-- Populate this with available services -->
             </select>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanDescription">Description</label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanDescription"><%= __('admin_pricing_plans__description') %></label>
             <textarea id="editPlanDescription" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanPrice">Price</label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanPrice"><%= __('admin_pricing_plans__price') %></label>
             <input type="number" id="editPlanPrice" name="price" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanBillingCycle">Billing Cycle</label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanBillingCycle"><%= __('admin_pricing_plans__billing_cycle') %></label>
             <select id="editPlanBillingCycle" name="billingCycle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-              <option value="one-time">One-time</option>
+              <option value="monthly"><%= __('admin_pricing_plans__monthly') %></option>
+              <option value="yearly"><%= __('admin_pricing_plans__yearly') %></option>
+              <option value="one-time"><%= __('admin_pricing_plans__one_time') %></option>
             </select>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanFeatures">Features (comma-separated)</label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editPlanFeatures"><%= __('admin_pricing_plans__features') %></label>
             <textarea type="text" id="editPlanFeatures" name="features" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
           </div>
           <div class="flex items-center justify-between">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update</button>
-            <button type="button" onclick="document.getElementById('editPricingPlanModal').classList.add('hidden')" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"><%= __('admin_pricing_plans__update_button') %></button>
+            <button type="button" onclick="document.getElementById('editPricingPlanModal').classList.add('hidden')" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"><%= __('admin_pricing_plans__cancel_button') %></button>
           </div>
         </form>
       </div>
@@ -105,15 +105,15 @@
   
     <!-- Pricing Plans List -->
     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-      <h2 class="text-2xl font-bold mb-4">Existing Pricing Plans</h2>
+      <h2 class="text-2xl font-bold mb-4"><%= __('admin_pricing_plans__existing_plans') %></h2>
       <table class="w-full">
         <thead>
           <tr>
-            <th class="px-4 py-2 text-left">Name</th>
-            <th class="px-4 py-2 text-left">Service</th>
-            <th class="px-4 py-2 text-left">Price</th>
-            <th class="px-4 py-2 text-left">Billing Cycle</th>
-            <th class="px-4 py-2 text-left">Actions</th>
+            <th class="px-4 py-2 text-left"><%= __('admin_pricing_plans__name') %></th>
+            <th class="px-4 py-2 text-left"><%= __('admin_pricing_plans__service') %></th>
+            <th class="px-4 py-2 text-left"><%= __('admin_pricing_plans__price') %></th>
+            <th class="px-4 py-2 text-left"><%= __('admin_pricing_plans__billing_cycle') %></th>
+            <th class="px-4 py-2 text-left"><%= __('admin_pricing_plans__actions') %></th>
           </tr>
         </thead>
         <tbody id="pricingPlansList">
@@ -123,7 +123,7 @@
     </div>
   
     <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold block mt-8">
-      &larr; Back to Dashboard
+      &larr; <%= __('admin_pricing_plans__back_to_dashboard') %>
     </a>
   </div>
   
@@ -140,13 +140,13 @@
             <tr>
               <td class="px-4 py-2">${plan.name}</td>
               <td class="px-4 py-2">
-                ${plan.service?.name ? `<a href="/admin/manage-services" >${plan.service.name}</a>` : 'N/A'}
+                ${plan.service?.name ? `<a href="/admin/manage-services">${plan.service.name}</a>` : '<%= __("admin_pricing_plans__na") %>'}
               </td>
-              <td class="px-4 py-2">$${plan.price.toFixed(2)}</td>
+              <td class="px-4 py-2">${plan.price.toFixed(2)}</td>
               <td class="px-4 py-2">${plan.billingCycle}</td>
               <td class="px-4 py-2">
-                <button onclick="openEditModal('${plan._id}')" class="text-blue-500 hover:text-blue-700 mr-2">Edit</button>
-                <button onclick="deletePricingPlan('${plan._id}')" class="text-red-500 hover:text-red-700">Delete</button>
+                <button onclick="openEditModal('${plan._id}')" class="text-blue-500 hover:text-blue-700 mr-2"><%= __('admin_pricing_plans__edit_button') %></button>
+                <button onclick="deletePricingPlan('${plan._id}')" class="text-red-500 hover:text-red-700"><%= __('admin_pricing_plans__delete_button') %></button>
               </td>
             </tr>
           `;
@@ -229,7 +229,7 @@
     
     // Delete pricing plan
     async function deletePricingPlan(planId) {
-      if (confirm('Are you sure you want to delete this pricing plan?')) {
+      if (confirm('<%= __('admin_pricing_plans__delete_confirm') %>')) {
         try {
           const response = await fetch(`/api/pricing-plans/${planId}`, {
             method: 'DELETE',
@@ -238,8 +238,8 @@
             fetchPricingPlans();
             new Notify({
               status: 'success',
-              title: 'Pricing Plan Deleted',
-              text: 'The pricing plan has been successfully deleted.',
+              title: '<%= __('admin_pricing_plans__delete_success_title') %>',
+              text: '<%= __('admin_pricing_plans__delete_success_message') %>',
               effect: 'fade',
               speed: 300,
               showIcon: true,
@@ -252,8 +252,8 @@
             const errorData = await response.json();
             new Notify({
               status: 'error',
-              title: 'Cannot Delete Pricing Plan',
-              text: errorData.message || 'This pricing plan cannot be deleted due to existing constraints.',
+              title: '<%= __('admin_pricing_plans__delete_error_title') %>',
+              text: errorData.message || '<%= __('admin_pricing_plans__delete_error_message') %>',
               effect: 'fade',
               speed: 300,
               showIcon: true,
@@ -268,8 +268,8 @@
           console.error('Error deleting pricing plan:', error);
           new Notify({
             status: 'error',
-            title: 'Error',
-            text: 'An unexpected error occurred while deleting the pricing plan.',
+            title: '<%= __('admin_pricing_plans__delete_error_title') %>',
+            text: '<%= __('admin_pricing_plans__delete_unexpected_error') %>',
             effect: 'fade',
             speed: 300,
             showIcon: true,
@@ -289,7 +289,7 @@
         const services = await response.json();
         const serviceDropdowns = document.querySelectorAll('#planService, #editPlanService');
         serviceDropdowns.forEach(dropdown => {
-          dropdown.innerHTML = '<option value="">Select service</option>';
+          dropdown.innerHTML = '<option value=""><%= __('admin_pricing_plans__select_service') %></option>';
           services.forEach(service => {
             dropdown.innerHTML += `<option value="${service._id}">${service.name}</option>`;
           });

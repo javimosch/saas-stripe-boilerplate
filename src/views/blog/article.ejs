@@ -1,4 +1,4 @@
-<%- include('../partials/layout') %>
+<%- include('../partials/layout', { title: __('blog_article__title') }) %>
 
     <div class="container mx-auto px-4 py-8">
 
@@ -7,10 +7,8 @@
                 <%= metadata.title %>
             </h1>
             
-
-            <p class="text-sm text-gray-600 mb-4">By <%= metadata.author %></p>
-            <p>Published on: <%= new Date(metadata.publishedDate).toLocaleDateString() %>
-            </p>
+            <p class="text-sm text-gray-600 mb-4"><%= __('blog_article__by') %> <%= metadata.author %></p>
+            <p><%= __('blog_article__published_on') %>: <%= new Date(metadata.publishedDate).toLocaleDateString() %></p>
         </section>
 
         <article class="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -18,7 +16,7 @@
         </article>
 
         <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <a href="/blog" class="text-gray-800 hover:text-blue-800">Back to Articles</a>
+            <a href="/blog" class="text-gray-800 hover:text-blue-800"><%= __('blog_article__back_to_articles') %></a>
         </section>
     </div>
 

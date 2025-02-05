@@ -1,22 +1,22 @@
-<%- include('../partials/layout-protected-top', { title: 'Manage Subscription' }) %>
+<%- include('../partials/layout-protected-top', { title: __('manage_subscription__title') }) %>
 
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>">Manage Subscription</h1>
+    <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>"><%= __('manage_subscription__heading') %></h1>
 
     <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-        <h2 class="text-2xl font-semibold mb-4">Subscription Details</h2>
-        <p><strong>Service:</strong> <%= subscription.service.name %></p>
-        <p><strong>Start Date:</strong> <%= subscription.startDate.toLocaleDateString() %></p>
-        <p><strong>End Date:</strong> <%= subscription.endDate.toLocaleDateString() %></p>
-        <p><strong>Status:</strong> 
+        <h2 class="text-2xl font-semibold mb-4"><%= __('manage_subscription__details') %></h2>
+        <p><strong><%= __('manage_subscription__service') %>:</strong> <%= subscription.service.name %></p>
+        <p><strong><%= __('manage_subscription__start_date') %>:</strong> <%= subscription.startDate.toLocaleDateString() %></p>
+        <p><strong><%= __('manage_subscription__end_date') %>:</strong> <%= subscription.endDate.toLocaleDateString() %></p>
+        <p><strong><%= __('manage_subscription__status') %>:</strong> 
             <span class="<%= subscription.status === 'active' ? 'text-green-600' : 'text-red-600' %>">
-                <%= subscription.status.charAt(0).toUpperCase() + subscription.status.slice(1) %>
+                <%= __(`manage_subscription__status_${subscription.status}`) %>
             </span>
         </p>
       
         <% if (user && user.role === 'admin' && subscription.stripeMetadata) { %>
             <div class="mt-4">
-                <h3 class="text-lg font-semibold mb-2">Stripe Metadata (Admin Only)</h3>
+                <h3 class="text-lg font-semibold mb-2"><%= __('manage_subscription__stripe_metadata') %></h3>
                 <pre class="bg-gray-100 p-2 rounded overflow-x-auto"><%= JSON.stringify(subscription.stripeMetadata, null, 2) %></pre>
             </div>
         <% } %>
@@ -24,34 +24,34 @@
 
     <% if (subscription.status === 'active') { %>
         <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Cancel Subscription</h2>
-            <p class="mb-4">Are you sure you want to cancel your subscription? This action cannot be undone.</p>
+            <h2 class="text-2xl font-semibold mb-4"><%= __('manage_subscription__cancel_subscription') %></h2>
+            <p class="mb-4"><%= __('manage_subscription__cancel_confirmation') %></p>
             <form action="/dashboard/subscription/<%= subscription._id %>/cancel" method="POST">
                 <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Cancel Subscription
+                    <%= __('manage_subscription__cancel_button') %>
                 </button>
             </form>
         </div>
     <% } else if (subscription.status === 'cancelled') { %>
         <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
-            <p class="font-bold">Subscription Cancelled</p>
-            <p>Your subscription has been cancelled and will expire on <%= subscription.endDate.toLocaleDateString() %>.</p>
+            <p class="font-bold"><%= __('manage_subscription__cancelled_title') %></p>
+            <p><%= __('manage_subscription__cancelled_message', { date: subscription.endDate.toLocaleDateString() }) %></p>
         </div>
     <% } else if (subscription.status === 'expired') { %>
         <div class="bg-gray-100 border-l-4 border-gray-500 text-gray-700 p-4 mb-6" role="alert">
-            <p class="font-bold">Subscription Expired</p>
-            <p>Your subscription has expired. If you wish to reactivate, please subscribe again.</p>
+            <p class="font-bold"><%= __('manage_subscription__expired_title') %></p>
+            <p><%= __('manage_subscription__expired_message') %></p>
         </div>
     <% } %>
 
     <div class="mt-8">
         <a href="/dashboard/subscriptions" class="<%=TW_LINK_TEXT_COLOR_CLASS%> font-semibold">
-            &larr; Back to Subscriptions
+            &larr; <%= __('manage_subscription__back_to_subscriptions') %>
         </a>
     </div>
     <div class="mt-8">
         <a href="/dashboard" class="<%=TW_LINK_TEXT_COLOR_CLASS%> font-semibold">
-            &larr; Back to Dashboard
+            &larr; <%= __('manage_subscription__back_to_dashboard') %>
         </a>
     </div>
 </div>

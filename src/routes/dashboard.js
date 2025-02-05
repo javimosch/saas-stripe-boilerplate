@@ -17,7 +17,22 @@ router.use(authMiddleware.canBeAuthenticated)
 // Dashboard home route
 router.get('/', authMiddleware.isAuthenticated, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    let user = await User.findById(req.user.id).select('-password').populate('organization');
+    
+    // Add default organization if user doesn't have one
+    if (!user.organization) {
+      const Organization = global.getMongooseModels(['Organization']).Organization;
+      const defaultOrg = new Organization({ name: `Default Org for ${user.email}` });
+      await defaultOrg.save();
+      
+      user.organization = defaultOrg._id;
+      await user.save();
+      
+      // Reload user with the new organization
+      user = await User.findById(req.user.id).select('-password').populate('organization');
+    }
+
+    console.log({user})
     res.render('dashboard/home', { ...global.getEjsData(), title: 'Dashboard', user });
   } catch (error) {
     console.error(error);

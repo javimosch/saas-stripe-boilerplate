@@ -1,6 +1,6 @@
-<%- include('../partials/layout', { title: 'Home' }) %>
+<%- include('../partials/layout', { title: __('services__title') }) %>
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>"><%= title %></h1>
+        <h1 class="text-4xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>"><%= __('services__heading') %></h1>
         <% if (services && services.length > 0) { %>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <% services.forEach(service => { %>
@@ -9,45 +9,40 @@
                         <p class="text-gray-600 mb-4"><%= service.description %></p>
                         <% if (service.pricingPlans && service.pricingPlans.length > 0) { %>
                             <div class="mb-4">
-                                <h3 class="text-lg font-semibold mb-2">Pricing Plans:</h3>
+                                <h3 class="text-lg font-semibold mb-2"><%= __('services__pricing_plans') %>:</h3>
                                 <ul class="list-disc pl-5">
                                     <% service.pricingPlans.forEach(plan => { %>
                                         <li class="text-gray-600">
-                                            €<%= plan.price.toFixed(2) %> / <%= plan.billingCycle %>
+                                            <%= __('services__price_per_cycle', { price: plan.price.toFixed(2), cycle: __(`services__billing_cycle_${plan.billingCycle}`) }) %>
                                         </li>
                                     <% }); %>
                                 </ul>
                             </div>
                             <a href="/services/<%= service._id %>" class="<%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded transition duration-300">
-                                Learn More
+                                <%= __('services__learn_more') %>
                             </a>
                         <% } else { %>
-                            <p class="text-gray-600 mb-4">No pricing plans available, check back later</p>
+                            <p class="text-gray-600 mb-4"><%= __('services__no_pricing_plans') %></p>
                         <% } %>
-                        
                     </div>
                 <% }); %>
             </div>
-            
         <% } else { %>
             <div class="bg-white shadow-md rounded-lg p-6">
-                <p class="text-xl text-gray-600">
-                    <%= __('services__no_services') %>
-                    </p>
+                <p class="text-xl text-gray-600"><%= __('services__no_services') %></p>
             </div>
         <% } %>
 
         <div class="mt-8">
-            
             <% if (typeof user !== 'undefined' && user) { %>
                 <a href="/dashboard" class="<%=TW_LINK_TEXT_COLOR_CLASS%>font-semibold">
-                    &larr; Back to Dashboard
+                    &larr; <%= __('services__back_to_dashboard') %>
                 </a>
             <% } else { %>
                 <!-- <a href="/" class="<%=TW_LINK_TEXT_COLOR_CLASS%>font-semibold">
-                    &larr; Back to Home
+                    &larr; <%= __('services__back_to_home') %>
                 </a> -->
             <% } %>
         </div>
     </div>
-<%- include('../partials/layout-public-bottom', { title: 'Home' }) %>
+<%- include('../partials/layout-public-bottom', { title: __('services__title') }) %>

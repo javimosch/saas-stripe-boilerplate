@@ -1,4 +1,4 @@
-<%- include('../partials/layout-protected-top', { title: 'Orders' }) %>
+<%- include('../partials/layout-protected-top', { title: __('admin_orders__title') }) %>
 
 <div id="root"></div>
 
@@ -9,7 +9,7 @@
 <script type="text/babel">
   const { useState, useEffect } = React;
 
-  function OrdersTable({ orders }) {
+  function OrdersTable({ orders, translations }) {
     const [sortedOrders, setSortedOrders] = useState(orders);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [currentPage, setCurrentPage] = useState(1);
@@ -48,20 +48,20 @@
         <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
-              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('_id')}>Order ID</th>
-              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('user.email')}>User</th>
-              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('service.name')}>Service</th>
-              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('status')}>Status</th>
-              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('totalAmount')}>Total Amount</th>
-              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('createdAt')}>Created At</th>
+              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('_id')}>{translations.orderId}</th>
+              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('user.email')}>{translations.user}</th>
+              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('service.name')}>{translations.service}</th>
+              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('status')}>{translations.status}</th>
+              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('totalAmount')}>{translations.totalAmount}</th>
+              <th className="py-3 px-4 text-left cursor-pointer" onClick={() => requestSort('createdAt')}>{translations.createdAt}</th>
             </tr>
           </thead>
           <tbody>
             {currentOrders.map(order => (
               <tr key={order._id} className="border-b">
                 <td className="py-3 px-4">{order._id}</td>
-                <td className="py-3 px-4">{order.user ? order.user.email : 'N/A'}</td>
-                <td className="py-3 px-4">{order.service ? order.service.name : 'N/A'}</td>
+                <td className="py-3 px-4">{order.user ? order.user.email : translations.na}</td>
+                <td className="py-3 px-4">{order.service ? order.service.name : translations.na}</td>
                 <td className="py-3 px-4">{order.status}</td>
                 <td className="py-3 px-4">${order.totalAmount.toFixed(2)}</td>
                 <td className="py-3 px-4">{new Date(order.createdAt).toLocaleString()}</td>
@@ -81,10 +81,21 @@
   }
 
   function App() {
+    const translations = {
+      title: "<%= __('admin_orders__title') %>",
+      orderId: "<%= __('admin_orders__order_id') %>",
+      user: "<%= __('admin_orders__user') %>",
+      service: "<%= __('admin_orders__service') %>",
+      status: "<%= __('admin_orders__status') %>",
+      totalAmount: "<%= __('admin_orders__total_amount') %>",
+      createdAt: "<%= __('admin_orders__created_at') %>",
+      na: "<%= __('admin_orders__na') %>"
+    };
+
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Admin Orders</h1>
-        <OrdersTable orders={<%- JSON.stringify(orders) %>} />
+        <h1 className="text-3xl font-bold mb-6">{translations.title}</h1>
+        <OrdersTable orders={<%- JSON.stringify(orders) %>} translations={translations} />
       </div>
     );
   }

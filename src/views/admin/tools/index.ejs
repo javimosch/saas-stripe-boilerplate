@@ -1,12 +1,12 @@
-<%- include('../../partials/layout-protected-top', { title: 'Manage Tools' }) %>
+<%- include('../../partials/layout-protected-top', { title: __('admin_tools__title') }) %>
 
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Manage Tools</h1>
+    <h1 class="text-3xl font-bold mb-6"><%= __('admin_tools__heading') %></h1>
 
     <!-- Add New Tool Button -->
     <div class="mb-6">
         <button id="addToolBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Add New Tool
+            <%= __('admin_tools__add_new') %>
         </button>
     </div>
 
@@ -16,19 +16,19 @@
             <thead>
                 <tr>
                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Name
+                        <%= __('admin_tools__name') %>
                     </th>
                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Description
+                        <%= __('admin_tools__description') %>
                     </th>
                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Render Mode
+                        <%= __('admin_tools__render_mode') %>
                     </th>
                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Pricing Plans
+                        <%= __('admin_tools__pricing_plans') %>
                     </th>
                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Actions
+                        <%= __('admin_tools__actions') %>
                     </th>
                 </tr>
             </thead>
@@ -49,10 +49,10 @@
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <button class="editToolBtn bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mr-2" data-tool-id="<%= tool._id %>">
-                                Edit
+                                <%= __('admin_tools__edit') %>
                             </button>
                             <button class="deleteToolBtn bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" data-tool-id="<%= tool._id %>">
-                                Delete
+                                <%= __('admin_tools__delete') %>
                             </button>
                         </td>
                     </tr>
@@ -71,39 +71,39 @@
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <form id="toolForm">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle">Add New Tool</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle"><%= __('admin_tools__add_new') %></h3>
                     <div class="mt-2">
                         <input type="hidden" id="toolId">
                         <div class="mb-4">
-                            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                            <label for="name" class="block text-gray-700 text-sm font-bold mb-2"><%= __('admin_tools__name') %>:</label>
                             <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                         </div>
                         <div class="mb-4">
-                            <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                            <label for="description" class="block text-gray-700 text-sm font-bold mb-2"><%= __('admin_tools__description') %>:</label>
                             <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
                         </div>
                         <div class="mb-4">
-                            <label for="renderMode" class="block text-gray-700 text-sm font-bold mb-2">Render Mode:</label>
+                            <label for="renderMode" class="block text-gray-700 text-sm font-bold mb-2"><%= __('admin_tools__render_mode') %>:</label>
                             <select id="renderMode" name="renderMode" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                                <option value="inline">Inline</option>
-                                <option value="external">External</option>
-                                <option value="download">Download</option>
+                                <option value="inline"><%= __('admin_tools__inline') %></option>
+                                <option value="external"><%= __('admin_tools__external') %></option>
+                                <option value="download"><%= __('admin_tools__download') %></option>
                             </select>
                         </div>
                         <div id="contentField" class="mb-4">
-                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content:</label>
+                            <label for="content" class="block text-gray-700 text-sm font-bold mb-2"><%= __('admin_tools__content') %>:</label>
                             <textarea id="content" name="content" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
                         </div>
                         <div id="externalUrlField" class="mb-4 hidden">
-                            <label for="externalUrl" class="block text-gray-700 text-sm font-bold mb-2">External URL:</label>
+                            <label for="externalUrl" class="block text-gray-700 text-sm font-bold mb-2"><%= __('admin_tools__external_url') %>:</label>
                             <input type="url" id="externalUrl" name="externalUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
                         <div id="downloadUrlField" class="mb-4 hidden">
-                            <label for="downloadUrl" class="block text-gray-700 text-sm font-bold mb-2">Download URL:</label>
+                            <label for="downloadUrl" class="block text-gray-700 text-sm font-bold mb-2"><%= __('admin_tools__download_url') %>:</label>
                             <input type="url" id="downloadUrl" name="downloadUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
                         <div class="mb-4">
-                            <label for="pricingPlans" class="block text-gray-700 text-sm font-bold mb-2">Pricing Plans:</label>
+                            <label for="pricingPlans" class="block text-gray-700 text-sm font-bold mb-2"><%= __('admin_tools__pricing_plans') %>:</label>
                             <select id="pricingPlans" name="pricingPlans" multiple class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                                 <% allPricingPlans.forEach(plan => { %>
                                     <option value="<%= plan._id %>"><%= plan.name %></option>
@@ -114,10 +114,10 @@
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Save
+                        <%= __('admin_tools__save') %>
                     </button>
                     <button type="button" id="cancelBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancel
+                        <%= __('admin_tools__cancel') %>
                     </button>
                 </div>
             </form>
@@ -137,7 +137,7 @@
         const downloadUrlField = document.getElementById('downloadUrlField');
 
         addToolBtn.addEventListener('click', () => {
-            document.getElementById('modalTitle').textContent = 'Add New Tool';
+            document.getElementById('modalTitle').textContent = '<%= __('admin_tools__add_new') %>';
             toolForm.reset();
             toolModal.classList.remove('hidden');
         });
@@ -180,10 +180,10 @@
                     toolModal.classList.add('hidden');
                     location.reload();
                 } else {
-                    console.error('Failed to save tool');
+                    console.error('<%= __('admin_tools__save_error') %>');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('<%= __('admin_tools__error') %>:', error);
             }
         });
 
@@ -193,7 +193,7 @@
                 const response = await fetch(`/api/tools/${toolId}`);
                 const tool = await response.json();
                 
-                document.getElementById('modalTitle').textContent = 'Edit Tool';
+                document.getElementById('modalTitle').textContent = '<%= __('admin_tools__edit') %>';
                 document.getElementById('toolId').value = tool._id;
                 document.getElementById('name').value = tool.name;
                 document.getElementById('description').value = tool.description;
@@ -215,7 +215,7 @@
 
         document.querySelectorAll('.deleteToolBtn').forEach(btn => {
             btn.addEventListener('click', async () => {
-                if (confirm('Are you sure you want to delete this tool?')) {
+                if (confirm('<%= __('admin_tools__delete_confirm') %>')) {
                     const toolId = btn.dataset.toolId;
                     try {
                         const response = await fetch(`/api/tools/${toolId}`, {
@@ -225,10 +225,10 @@
                         if (response.ok) {
                             location.reload();
                         } else {
-                            console.error('Failed to delete tool');
+                            console.error('<%= __('admin_tools__delete_error') %>');
                         }
                     } catch (error) {
-                        console.error('Error:', error);
+                        console.error('<%= __('admin_tools__error') %>:', error);
                     }
                 }
             });

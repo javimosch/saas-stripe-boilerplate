@@ -1,0 +1,306 @@
+<%- include('../partials/layout-protected-top', { title: 'Manage Organizations' }) %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Manage Organizations</h1>
+
+  <!-- Create Organization Form -->
+  <form id="createOrgForm" class="mb-6 bg-white shadow-md rounded px-8 pt-6 pb-8">
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Organization Name</label>
+      <input type="text" id="name" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+    </div>
+    <button type="button" onclick="createOrganization()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Create Organization</button>
+  </form>
+
+  <table class="w-full bg-white shadow-md rounded mb-4">
+    <thead>
+      <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+        <th class="py-3 px-6 text-left">Organization Name</th>
+        <th class="py-3 px-6 text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="organizationList">
+      <% organizations.forEach(org => { %>
+        <tr class="border-b border-gray-200 hover:bg-gray-100" data-org-id="<%= org._id %>">
+          <td class="py-3 px-6 text-left"><%= org.name %></td>
+          <td class="py-3 px-6 text-center">
+            <button onclick="openEditModal('<%= org._id %>')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">Edit</button>
+            <button onclick="confirmDelete('<%= org._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">Delete</button>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold block mt-8">&larr; Back to Dashboard</a>
+</div>
+
+<!-- Edit Organization Modal -->
+<div id="editOrgModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded-lg p-6 w-full max-w-2xl">
+      <h2 class="text-xl font-semibold mb-4">Edit Organization</h2>
+      <form id="editOrgForm">
+        <input type="hidden" id="editOrgId" name="id" />
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="editName">Organization Name</label>
+          <input type="text" id="editName" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <button type="button" onclick="updateOrganization()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Organization</button>
+        <button type="button" onclick="closeEditModal()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+      </form>
+
+
+      <div class="mt-8">
+        <h3 class="text-lg font-semibold mb-2">Linked Documents</h3>
+        <select id="modelTypeFilter" onchange="fetchLinkedDocuments()" class="mb-4 shadow border rounded py-2 px-3 text-gray-700">
+          <!-- Options will be populated dynamically -->
+        </select>
+        <table id="linkedDocumentsTable" class="w-full bg-white shadow-md rounded">
+          <thead>
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th class="py-3 px-6 text-left">ID</th>
+              <th class="py-3 px-6 text-left">Name/Email</th>
+              <th class="py-3 px-6 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Linked documents will be populated here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-8">
+        <h3 class="text-lg font-semibold mb-2">Unlinked Documents</h3>
+        <select id="unlinkedModelTypeFilter" onchange="fetchUnlinkedDocuments()" class="mb-4 shadow border rounded py-2 px-3 text-gray-700">
+          <!-- Options will be populated dynamically -->
+        </select>
+        <table id="unlinkedDocumentsTable" class="w-full bg-white shadow-md rounded">
+          <thead>
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th class="py-3 px-6 text-left">ID</th>
+              <th class="py-3 px-6 text-left">Name/Email</th>
+              <th class="py-3 px-6 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Unlinked documents will be populated here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-8">
+        <h3 class="text-lg font-semibold mb-2">Link New Document</h3>
+        <select id="linkModelType" class="mb-2 shadow border rounded py-2 px-3 text-gray-700">
+          <!-- Options will be populated dynamically -->
+        </select>
+        <input type="text" id="linkDocumentId" placeholder="Document ID" class="mb-2 shadow appearance-none border rounded py-2 px-3 text-gray-700" />
+        <button onclick="linkDocument()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Link Document</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function createOrganization() {
+    const name = document.getElementById('name').value;
+    try {
+      const response = await fetch('/admin/organizations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        const newOrg = result.organization;
+        document.getElementById('organizationList').innerHTML += `
+          <tr class="border-b border-gray-200 hover:bg-gray-100" data-org-id="${newOrg._id}">
+            <td class="py-3 px-6 text-left">${newOrg.name}</td>
+            <td class="py-3 px-6 text-center">
+              <button onclick="openEditModal('${newOrg._id}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">Edit</button>
+              <button onclick="confirmDelete('${newOrg._id}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">Delete</button>
+            </td>
+          </tr>
+        `;
+        document.getElementById('createOrgForm').reset();
+      } else {
+        alert('Error creating organization: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while creating the organization.');
+    }
+  }
+
+  async function openEditModal(id) {
+    try {
+      const response = await fetch(`/admin/organizations/${id}`);
+      const result = await response.json();
+      if (result.success) {
+        document.getElementById('editOrgId').value = id;
+        document.getElementById('editName').value = result.organization.name;
+        populateModelTypeOptions(result.availableModels);
+        populateUnlinkedModelTypeOptions(result.availableModels);
+        fetchLinkedDocuments();
+        fetchUnlinkedDocuments();
+        document.getElementById('editOrgModal').classList.remove('hidden');
+      } else {
+        alert('Error fetching organization details: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while fetching organization details.');
+    }
+  }
+
+  function populateModelTypeOptions(models) {
+    const filterSelect = document.getElementById('modelTypeFilter');
+    const linkSelect = document.getElementById('linkModelType');
+    filterSelect.innerHTML = '';
+    linkSelect.innerHTML = '';
+    models.forEach(model => {
+      filterSelect.innerHTML += `<option value="${model}">${model}</option>`;
+      linkSelect.innerHTML += `<option value="${model}">${model}</option>`;
+    });
+  }
+
+  function populateUnlinkedModelTypeOptions(models) {
+    const unlinkedFilterSelect = document.getElementById('unlinkedModelTypeFilter');
+    unlinkedFilterSelect.innerHTML = '';
+    models.forEach(model => {
+      unlinkedFilterSelect.innerHTML += `<option value="${model}">${model}</option>`;
+    });
+  }
+
+  async function fetchLinkedDocuments() {
+    const orgId = document.getElementById('editOrgId').value;
+    const modelType = document.getElementById('modelTypeFilter').value;
+    try {
+      const response = await fetch(`/admin/organizations/${orgId}?modelType=${modelType}`);
+      const result = await response.json();
+      if (result.success) {
+        const tableBody = document.querySelector('#linkedDocumentsTable tbody');
+        tableBody.innerHTML = '';
+        result.linkedDocuments.forEach(doc => {
+          tableBody.innerHTML += `
+            <tr>
+              <td class="py-3 px-6 text-left">${doc._id}</td>
+              <td class="py-3 px-6 text-left">${doc.name || doc.email || 'N/A'}</td>
+              <td class="py-3 px-6 text-center">
+                <button onclick="unlinkDocument('${doc._id}', '${modelType}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">Unlink</button>
+              </td>
+            </tr>
+          `;
+        });
+      } else {
+        alert('Error fetching linked documents: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while fetching linked documents.');
+    }
+  }
+
+  async function fetchUnlinkedDocuments() {
+    const orgId = document.getElementById('editOrgId').value;
+    const modelType = document.getElementById('unlinkedModelTypeFilter').value;
+    try {
+      const response = await fetch(`/admin/organizations/${orgId}/unlinked?modelType=${modelType}`);
+      const result = await response.json();
+      if (result.success) {
+        const tableBody = document.querySelector('#unlinkedDocumentsTable tbody');
+        tableBody.innerHTML = '';
+        result.unlinkedDocuments.forEach(doc => {
+          tableBody.innerHTML += `
+            <tr>
+              <td class="py-3 px-6 text-left">${doc._id}</td>
+              <td class="py-3 px-6 text-left">${doc.name || doc.email || 'N/A'}</td>
+              <td class="py-3 px-6 text-center">
+                <button onclick="linkDocument('${doc._id}', '${modelType}')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-xs">Link</button>
+              </td>
+            </tr>
+          `;
+        });
+      } else {
+        alert('Error fetching unlinked documents: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while fetching unlinked documents.');
+    }
+  }
+
+  async function updateOrganization() {
+    const id = document.getElementById('editOrgId').value;
+    const name = document.getElementById('editName').value;
+
+    try {
+      const response = await fetch(`/admin/organizations/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        const orgRow = document.querySelector(`tr[data-org-id="${id}"]`);
+        orgRow.querySelector('td:first-child').textContent = name;
+        closeEditModal();
+      } else {
+        alert('Error updating organization: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while updating the organization.');
+    }
+  }
+
+  function closeEditModal() {
+    document.getElementById('editOrgModal').classList.add('hidden');
+  }
+
+  function confirmDelete(id) {
+    if (confirm('Are you sure you want to delete this organization?')) {
+      fetch(`/admin/organizations/${id}`, {
+        method: 'DELETE',
+      }).then(response => {
+        if (response.ok) {
+          document.querySelector(`tr[data-org-id="${id}"]`).remove();
+        } else {
+          alert('Error deleting organization');
+        }
+      });
+    }
+  }
+
+  async function linkDocument() {
+    const orgId = document.getElementById('editOrgId').value;
+    const modelType = document.getElementById('linkModelType').value;
+    const documentId = document.getElementById('linkDocumentId').value;
+
+    try {
+      const response = await fetch(`/admin/organizations/${orgId}/link`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ modelType, documentId }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        fetchLinkedDocuments();
+        document.getElementById('linkDocumentId').value = '';
+      } else {
+        alert('Error linking document: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while linking the document.');
+    }
+  }
+</script>
+
+<%- include('../partials/layout-public-bottom') %>

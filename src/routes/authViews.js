@@ -30,26 +30,13 @@ router.post('/register', async (req, res) => {
         error: 'User already exists'
       });
     }
+    // Use extracted function to register user with organization
+    const newUser = await global.registerUserWithOrganization(username, email, password);
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create new user
-    user = new User({
-      username,
-      email,
-      password: hashedPassword
-    });
-
-
-
-    await user.save();
-
-    req.session.userId = user._id
+    req.session.userId = newUser._id;
 
     await logEvent('info', `Register success`, {
-      email: user.email
+      email: newUser.email
     });
 
     res.redirect('/auth/login');

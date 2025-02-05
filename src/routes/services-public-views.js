@@ -3,15 +3,14 @@ const router = express.Router();
 const authMiddleware = require('../middleware/auth');
 
 
-// List all services
 router.get('/', authMiddleware.canBeAuthenticated, async (req, res) => {
   const {Service} = global.getMongooseModels(['Service'])
   try {
-    const services = await Service.find().populate('pricingPlans');
+    const services = await Service.find({ active: true }).populate('pricingPlans');
     console.log({
       services
     })
-    res.render('services/index', { ...global.getEjsData(),title: 'Our Services', services, user: req.user || null });
+    res.render('services/index', { ...global.getEjsData(), title: 'Our Services', services, user: req.user || null });
   } catch (error) {
     console.error(error)
     res.status(500).render('error', {...global.getEjsData(), message: 'Error fetching services' });

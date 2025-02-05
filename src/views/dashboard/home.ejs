@@ -1,20 +1,25 @@
-<%- include('../partials/layout-protected-top', { title: 'Home' }) %>
+<%- include('../partials/layout-protected-top', { title: __('dashboard_home__title') }) %>
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>">
             <%= __('dashboard_home__welcome') %>
-            </h1>
+        </h1>
         
+        <!-- Add an organization section here -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-            <h2 class="text-xl font-semibold mb-4">User Information</h2>
-            <p><strong>Username:</strong> <%= user.username %></p>
-            <p><strong>Email:</strong> <%= user.email %></p>
-            <p><strong>Member since:</strong> <%= user.createdAt.toLocaleDateString() %></p>
-            <% if (user.role === 'admin') { %>
+            <h2 class="text-xl font-semibold mb-4"><%= __('dashboard_home__organization_info') %></h2>
+            <p><strong><%= __('dashboard_home__organization_name') %>:</strong> <%= user.organization.name %></p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4"><%= __('dashboard_home__user_info') %></h2>
+            <p><strong><%= __('dashboard_home__email') %>:</strong> <%= user.email %></p>
+            <p><strong><%= __('dashboard_home__member_since') %>:</strong> <%= user.createdAt ? user.createdAt.toLocaleDateString() : 'N/A' %></p>
+            <% if (user.role === 'admin' || user.role === 'super_admin') { %>
                 <p class="mt-2 <%=TW_TEXT_COLOR_CLASS%> font-semibold">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
-                    Administrator
+                    <%= __('dashboard_home__administrator') %>
                 </p>
             <% } %>
         </div>
@@ -23,20 +28,17 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <a href="/services" class="<%=TW_BTN_CLASS%> font-bold py-4 px-6 rounded-lg text-center transition duration-300">
-                Explore services
+                <%= __('dashboard_home__explore_services') %>
             </a>
             <a href="/dashboard/subscriptions" class="<%=TW_BTN_CLASS%> font-bold py-4 px-6 rounded-lg text-center transition duration-300">
-                My Subscriptions
+                <%= __('dashboard_home__my_subscriptions') %>
             </a>
             <a href="/dashboard/orders" class="<%=TW_BTN_CLASS%> text-white font-bold py-4 px-6 rounded-lg text-center transition duration-300">
-                My Orders
+                <%= __('dashboard_home__my_orders') %>
             </a>
             <a href="/dashboard/tools" class="<%=TW_BTN_CLASS%> text-white font-bold py-4 px-6 rounded-lg text-center transition duration-300">
-                My tools
+                <%= __('dashboard_home__my_tools') %>
             </a>
-            <!-- <a href="/services" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-6 rounded-lg text-center transition duration-300">
-                Browse Services
-            </a> -->
         </div>
     </div>
 
@@ -48,8 +50,8 @@
         if (subscriptionSuccess === '1') {
           new Notify({
             status: 'success',
-            title: 'Subscription Success',
-            text: 'Your subscription was successfully added to your account.',
+            title: '<%= __('dashboard_home__subscription_success_title') %>',
+            text: '<%= __('dashboard_home__subscription_success_message') %>',
             effect: 'fade',
             speed: 300,
             customClass: null,
@@ -66,4 +68,4 @@
         }
       </script>
 
-<%- include('../partials/layout-public-bottom', { title: 'Home' }) %>
+<%- include('../partials/layout-public-bottom', { title: __('dashboard_home__title') }) %>

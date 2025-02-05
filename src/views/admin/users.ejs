@@ -17,6 +17,7 @@
   <table class="w-full bg-white shadow-md rounded mb-4">
     <thead>
       <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+        <th class="py-3 px-6 text-left">ID</th>
         <th class="py-3 px-6 text-left hidden">Username</th>
         <th class="py-3 px-6 text-left">Email</th>
         <th class="py-3 px-6 text-center">Role</th>
@@ -25,7 +26,8 @@
     </thead>
     <tbody class="text-gray-600 text-sm font-light">
       <% users.forEach(user => { %>
-        <tr class="border-b border-gray-200 hover:bg-gray-100">
+        <tr class="border-b border-gray-200 hover:bg-gray-100" data-user-id="<%= user._id %>">
+          <td class="py-3 px-6 text-left"><%= user._id %></td>
           <td class="py-3 px-6 text-left hidden"><%= user.username %></td>
           <td class="py-3 px-6 text-left"><%= user.email %></td>
           <td class="py-3 px-6 text-center"><%= user.role %></td>
@@ -165,9 +167,9 @@
       if (data.success) {
         // Update the user row in the table
         const row = document.querySelector(`tr[data-user-id="${userId}"]`);
-        row.querySelector('td:nth-child(1)').textContent = userData.username||"";
-        row.querySelector('td:nth-child(2)').textContent = userData.email;
-        row.querySelector('td:nth-child(3)').textContent = userData.role;
+        //row.querySelector('td:nth-child(0)').textContent = userData._id||"";
+        row.querySelector('td:nth-child(3)').textContent = userData.email;
+        row.querySelector('td:nth-child(4)').textContent = userData.role;
         
         // Hide the edit form modal
         document.getElementById('editUserModal').classList.add('hidden');

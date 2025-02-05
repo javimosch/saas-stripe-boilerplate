@@ -1,4 +1,4 @@
-<%- include('../partials/layout-protected-top', { title: 'Orders' }) %>
+<%- include('../partials/layout-protected-top', { title: __('dashboard_orders__title') }) %>
 <script>
     window.orders = []
     <% orders.forEach(order => { %>
@@ -7,20 +7,20 @@
     console.log({orders})
 </script>
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>">My Orders</h1>
+    <h1 class="text-3xl font-bold mb-6 <%=TW_TEXT_COLOR_CLASS%>"><%= __('dashboard_orders__heading') %></h1>
     
     <% if (orders && orders.length > 0) { %>
         <div class="overflow-x-auto">
             <table class="w-full bg-white shadow-md rounded-lg">
                 <thead>
                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left">Order ID</th>
-                        <th class="py-3 px-6 text-left">Service</th>
-                        <th class="py-3 px-6 text-left">Pricing Plan</th>
-                        <th class="py-3 px-6 text-left">Subscription</th>
-                        <th class="py-3 px-6 text-left">Date</th>
-                        <th class="py-3 px-6 text-left">Amount</th>
-                        <th class="py-3 px-6 text-left">Status</th>
+                        <th class="py-3 px-6 text-left"><%= __('dashboard_orders__order_id') %></th>
+                        <th class="py-3 px-6 text-left"><%= __('dashboard_orders__service') %></th>
+                        <th class="py-3 px-6 text-left"><%= __('dashboard_orders__pricing_plan') %></th>
+                        <th class="py-3 px-6 text-left"><%= __('dashboard_orders__subscription') %></th>
+                        <th class="py-3 px-6 text-left"><%= __('dashboard_orders__date') %></th>
+                        <th class="py-3 px-6 text-left"><%= __('dashboard_orders__amount') %></th>
+                        <th class="py-3 px-6 text-left"><%= __('dashboard_orders__status') %></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
@@ -30,18 +30,18 @@
                                 <%= order._id %>
                             </td>
                             <td class="py-3 px-6 text-left">
-                                <%= order.service ? order.service.name : 'N/A' %>
+                                <%= order.service ? order.service.name : __('dashboard_orders__na') %>
                             </td>
                             <td class="py-3 px-6 text-left">
-                                <%= order.pricingPlan ? `${order.pricingPlan.name} - ${order.pricingPlan.billingCycle}` : 'N/A' %>
+                                <%= order.pricingPlan ? `${order.pricingPlan.name} - ${__(`dashboard_orders__billing_cycle_${order.pricingPlan.billingCycle}`)}` : __('dashboard_orders__na') %>
                             </td>
                             <td class="py-3 px-6 text-left">
                                 <% if (order.subscription) { %>
                                     <a href="/dashboard/subscription/<%= order.subscription._id %>" class="text-blue-600 hover:text-blue-800 underline">
-                                        Yes - <%= order.subscription.status %>
+                                        <%= __('dashboard_orders__subscription_yes') %> - <%= __(`dashboard_orders__subscription_status_${order.subscription.status}`) %>
                                     </a>
                                 <% } else { %>
-                                    No
+                                    <%= __('dashboard_orders__subscription_no') %>
                                 <% } %>
                             </td>
                             <td class="py-3 px-6 text-left">
@@ -52,7 +52,7 @@
                             </td>
                             <td class="py-3 px-6 text-left">
                                 <span class="<%= order.status === 'completed' ? 'bg-green-200 text-green-600' : 'bg-yellow-200 text-yellow-600' %> py-1 px-3 rounded-full text-xs">
-                                    <%= order.status %>
+                                    <%= __(`dashboard_orders__status_${order.status}`) %>
                                 </span>
                             </td>
                         </tr>
@@ -62,16 +62,16 @@
         </div>
     <% } else { %>
         <div class="bg-white shadow-md rounded-lg p-6">
-            <p class="text-xl text-gray-600">You haven't placed any orders yet.</p>
+            <p class="text-xl text-gray-600"><%= __('dashboard_orders__no_orders') %></p>
             <a href="/services" class="inline-block mt-4 <%=TW_BTN_CLASS%> font-bold py-2 px-4 rounded transition duration-300">
-                Browse Available Services
+                <%= __('dashboard_orders__browse_services') %>
             </a>
         </div>
     <% } %>
 
     <div class="mt-8">
         <a href="/dashboard" class="<%=TW_LINK_TEXT_COLOR_CLASS%> font-semibold">
-            &larr; Back to Dashboard
+            &larr; <%= __('dashboard_orders__back_to_dashboard') %>
         </a>
     </div>
 </div>

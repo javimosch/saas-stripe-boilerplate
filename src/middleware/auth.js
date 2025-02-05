@@ -59,8 +59,21 @@ async function canBeAuthenticated(req, res, next) {
   }
 }
 
-const isAdmin = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
+const isAdmin = async (req, res, next) => {
+  if (req.user && (req.user.role === 'admin' || req.user.role === 'super_admin')) {
+    if (req.user.role === 'super_admin') {
+      return next();
+    }
+    // For regular admins, set the organization filter
+    req.organizationFilter = { organization: req.user.organization };
+    next();
+  } else {
+    res.status(403).render('error', {...global.getEjsData(), message: 'Access denied. Admin only.' });
+  }
+};
+
+const isSuperAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'super_admin') {
     next();
   } else {
     res.status(403).render('error', {...global.getEjsData(), message: 'Access denied. Admin only.' });
@@ -70,5 +83,6 @@ const isAdmin = (req, res, next) => {
 authMiddleware.isAuthenticated  = isAuthenticated
 authMiddleware.canBeAuthenticated=canBeAuthenticated
 authMiddleware.isAdmin=isAdmin
+authMiddleware.isSuperAdmin=isSuperAdmin
 
 module.exports = authMiddleware;

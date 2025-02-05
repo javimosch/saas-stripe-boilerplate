@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'client'],
+    enum: ['admin', 'client','super_admin'],
     default: 'client'
   },
   createdAt: {
@@ -30,7 +30,12 @@ const UserSchema = new mongoose.Schema({
     type:String,
   },
   subscriptions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' }],
-  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }] // Add this line
+  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }], // Add this line
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: false
+  }
 });
 
 // Create the User model

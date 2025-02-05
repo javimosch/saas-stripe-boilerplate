@@ -1,0 +1,8 @@
+node_modules
+.env
+.env.prod
+.env*
+deploy*
+docker*
+env*
+readme*

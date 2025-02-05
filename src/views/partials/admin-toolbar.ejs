@@ -1,7 +1,7 @@
-<% if (user && user.role === 'admin') { %>
+<% if (user && (user.role === 'admin' || user.role === 'super_admin')) { %>
     <div class="bg-white py-2 px-4 my-4">
       <div class="container mx-auto flex items-center justify-between">
-        <span class=" text-black font-semibold">Admin Tools</span>
+        <span class="text-black font-semibold">Admin Tools</span>
         <nav>
           <a href="/admin/users" class="text-gray-800 hover:text-black mx-2">Manage Users</a>
           <a href="/admin/manage-services" class="text-gray-800 hover:text-black mx-2">Manage Services</a>
@@ -10,7 +10,8 @@
           <a href="/admin/manage-pricing-plans" class="text-gray-800 hover:text-black mx-2">Manage Pricing Plans</a> 
           <a href="/admin/orders" class="text-gray-800 hover:text-black mx-2">View Orders</a>
           <!-- <a href="/admin/settings" class="text-gray-800 hover:text-black mx-2">Site Settings</a> -->
+          <a href="/admin/manage-organizations" class="text-gray-800 hover:text-black mx-2">Manage Organizations</a> <!-- New Link -->
         </nav>
       </div>
     </div>
-  <% } %>
+<% } %>

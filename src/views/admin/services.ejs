@@ -1,241 +1,284 @@
-<%- include('../partials/layout-protected-top', { title: 'Manage Services' }) %>
+<%- include('../partials/layout-protected-top', { title: __('admin_services__title') }) %>
 
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Manage Services</h1>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6"><%= __('admin_services__heading') %></h1>
 
-  <!-- Add New Service Form -->
-  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <h2 class="text-2xl font-bold mb-4">Add New Service</h2>
-    <form id="addServiceForm" onsubmit="event.preventDefault(); addService();">
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="serviceName">
-          Service Name
-        </label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="serviceName" name="name" type="text" placeholder="Enter service name" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="serviceDescription">
-          Description
-        </label>
-        <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="serviceDescription" name="description" placeholder="Enter service description" required></textarea>
-      </div>
-      <div class="flex items-center justify-between">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-          Add Service
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <div id="editServiceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-      <h3 class="text-lg font-bold mb-4">Edit Service</h3>
-      <form id="editServiceForm" onsubmit="event.preventDefault(); updateService();">
-        <input type="hidden" id="editServiceId" name="_id">
+    <!-- Add New Service Form -->
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h2 class="text-2xl font-bold mb-4"><%= __('admin_services__add_new') %></h2>
+      <form id="addServiceForm" onsubmit="event.preventDefault(); addService();">
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="editServiceName">Name</label>
-          <input type="text" id="editServiceName" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="serviceName">
+            <%= __('admin_services__service_name') %>
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="serviceName" name="name" type="text" placeholder="<%= __('admin_services__service_name_placeholder') %>" required>
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="editServiceDescription">Description</label>
-          <textarea id="editServiceDescription" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="serviceDescription">
+            <%= __('admin_services__description') %>
+          </label>
+          <textarea
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="serviceDescription" name="description" placeholder="<%= __('admin_services__description_placeholder') %>" required></textarea>
         </div>
         <div class="flex items-center justify-between">
-          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update</button>
-          <button type="button" onclick="document.getElementById('editServiceModal').classList.add('hidden')" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit">
+            <%= __('admin_services__add_button') %>
+          </button>
         </div>
       </form>
     </div>
+
+    <div id="editServiceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <h3 class="text-lg font-bold mb-4"><%= __('admin_services__edit_modal_title') %></h3>
+        <form id="editServiceForm" onsubmit="event.preventDefault(); updateService();">
+          <input type="hidden" id="editServiceId" name="_id">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editServiceName"><%= __('admin_services__service_name') %></label>
+            <input type="text" id="editServiceName" name="name"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="editServiceDescription"><%= __('admin_services__description') %></label>
+            <textarea id="editServiceDescription" name="description"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required></textarea>
+          </div>
+          <div class="flex items-center justify-between">
+            <button type="submit"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"><%= __('admin_services__update_button') %></button>
+            <button type="button" onclick="document.getElementById('editServiceModal').classList.add('hidden')"
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"><%= __('admin_services__cancel_button') %></button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Services List -->
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+      <h2 class="text-2xl font-bold mb-4"><%= __('admin_services__existing_services') %></h2>
+      <table class="w-full">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 text-left"><%= __('admin_services__name') %></th>
+            <th class="px-4 py-2 text-left"><%= __('admin_services__description') %></th>
+            <th class="px-4 py-2 text-left">
+              <a href="/admin/manage-pricing-plans"><%= __('admin_services__pricing_plans') %></a>
+            </th>
+            <th class="px-4 py-2 text-left"><%= __('admin_services__active') %></th>
+            <th class="px-4 py-2 text-left"><%= __('admin_services__actions') %></th>
+          </tr>
+        </thead>
+        <tbody id="servicesList">
+          <!-- Services will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+
+    <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold block mt-8">
+      &larr; <%= __('admin_services__back_to_dashboard') %>
+    </a>
   </div>
 
-  <!-- Services List -->
-  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-    <h2 class="text-2xl font-bold mb-4">Existing Services</h2>
-    <table class="w-full">
-      <thead>
-        <tr>
-          <th class="px-4 py-2 text-left">Name</th>
-          <th class="px-4 py-2 text-left">Description</th>
-          <th class="px-4 py-2 text-left">
-            <a href="/admin/manage-pricing-plans">Pricing Plans</a>
-          </th>
-          <th class="px-4 py-2 text-left">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="servicesList">
-        <!-- Services will be dynamically added here -->
-      </tbody>
-    </table>
-  </div>
+  <script>
+    // Fetch and display services
+    async function fetchServices() {
+      try {
+        const response = await fetch('/api/services?populate=pricingPlans');
+        const services = await response.json();
+        const servicesList = document.getElementById('servicesList');
+        servicesList.innerHTML = '';
+        services.forEach(service => {
+          const pricingPlans = service.pricingPlans.map(plan =>
+            `${plan.name} ($${plan.price} ${plan.billingCycle})`
+          ).join(', ') || '<%= __('admin_services__no_pricing_plans') %>';
 
-  <a href="/dashboard" class="text-blue-500 hover:text-blue-600 font-semibold block mt-8">
-    &larr; Back to Dashboard
-  </a>
-</div>
+          const activeCheckbox = `
+        <input type="checkbox" 
+               id="active-${service._id}" 
+               ${service.active ? 'checked' : ''} 
+               onclick="toggleActiveService('${service._id}')">
+      `;
 
-<script>
-// Fetch and display services
-async function fetchServices() {
-  try {
-    const response = await fetch('/api/services?populate=pricingPlans');
-    const services = await response.json();
-    const servicesList = document.getElementById('servicesList');
-    servicesList.innerHTML = '';
-    services.forEach(service => {
-      const pricingPlans = service.pricingPlans.map(plan => 
-        `${plan.name} ($${plan.price} ${plan.billingCycle})`
-      ).join(', ') || 'No pricing plans';
-      
-      servicesList.innerHTML += `
+          servicesList.innerHTML += `
         <tr>
           <td class="px-4 py-2">${service.name}</td>
           <td class="px-4 py-2">${service.description}</td>
           <td class="px-4 py-2">${pricingPlans}</td>
+          <td class="px-4 py-2">${activeCheckbox}</td>
           <td class="px-4 py-2">
-            <button onclick="openEditModal('${service._id}')" class="text-blue-500 hover:text-blue-700 mr-2">Edit</button>
-            <button onclick="deleteService('${service._id}')" class="text-red-500 hover:text-red-700">Delete</button>
+            <button onclick="openEditModal('${service._id}')" class="text-blue-500 hover:text-blue-700 mr-2"><%= __('admin_services__edit_button') %></button>
+            <button onclick="deleteService('${service._id}')" class="text-red-500 hover:text-red-700"><%= __('admin_services__delete_button') %></button>
           </td>
         </tr>
       `;
-    });
-  } catch (error) {
-    console.error('Error fetching services:', error);
-  }
-}
-
-// Add new service
-async function addService() {
-  const form = document.getElementById('addServiceForm');
-  const formData = new FormData(form);
-  const serviceData = Object.fromEntries(formData.entries());
-
-  try {
-    const response = await fetch('/api/services', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(serviceData),
-    });
-    if (response.ok) {
-      form.reset();
-      fetchServices();
-    } else {
-      console.error('Error adding service');
-    }
-  } catch (error) {
-    console.error('Error adding service:', error);
-  }
-}
-
-// Open edit modal and populate with service data
-async function openEditModal(serviceId) {
-  try {
-    const response = await fetch(`/api/services/${serviceId}?populate=pricingPlans`);
-    const service = await response.json();
-    document.getElementById('editServiceId').value = service._id;
-    document.getElementById('editServiceName').value = service.name;
-    document.getElementById('editServiceDescription').value = service.description;
-    document.getElementById('editServiceModal').classList.remove('hidden');
-  } catch (error) {
-    console.error('Error fetching service details:', error);
-  }
-}
-
-// Update service
-async function updateService() {
-  const serviceId = document.getElementById('editServiceId').value;
-  const form = document.getElementById('editServiceForm');
-  const formData = new FormData(form);
-  const serviceData = Object.fromEntries(formData.entries());
-
-  try {
-    const response = await fetch(`/api/services/${serviceId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(serviceData),
-    });
-    if (response.ok) {
-      document.getElementById('editServiceModal').classList.add('hidden');
-      fetchServices();
-    } else {
-      console.error('Error updating service');
-    }
-  } catch (error) {
-    console.error('Error updating service:', error);
-  }
-}
-
-// Delete service
-async function deleteService(serviceId) {
-  if (confirm('Are you sure you want to delete this service?')) {
-    try {
-      const response = await fetch(`/api/services/${serviceId}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        fetchServices();
-        new Notify({
-          status: 'success',
-          title: 'Service Deleted',
-          text: 'The service has been successfully deleted.',
-          effect: 'fade',
-          speed: 300,
-          showIcon: true,
-          showCloseButton: true,
-          autoclose: true,
-          autotimeout: 3000,
-          gap: 20,
-          distance: 20,
-          type: 1,
-          position: 'x-center-bottom'
         });
-      } else if (response.status === 409) {
-        const errorData = await response.json();
-        new Notify({
-          status: 'error',
-          title: 'Cannot Delete Service',
-          text: errorData.message || 'This service cannot be deleted due to existing constraints.',
-          effect: 'fade',
-          speed: 300,
-          showIcon: true,
-          showCloseButton: true,
-          autoclose: false,
-          autotimeout: 3000,
-          gap: 20,
-          distance: 20,
-          type: 3,
-          position: 'x-center-bottom'
-        });
-      } else {
-        throw new Error('Error deleting service');
+      } catch (error) {
+        console.error('Error fetching services:', error);
       }
-    } catch (error) {
-      console.error('Error deleting service:', error);
-      new Notify({
-        status: 'error',
-        title: 'Error',
-        text: 'An unexpected error occurred while deleting the service.',
-        effect: 'fade',
-        speed: 300,
-        showIcon: true,
-        showCloseButton: true,
-        autoclose: false,
-        autotimeout: 3000,
-        gap: 20,
-        distance: 20,
-        type: 3,
-        position: 'x-center-bottom'
-      });
     }
-  }
-}
+
+    async function toggleActiveService(serviceId) {
+      try {
+        let active = document.querySelector(`#active-${serviceId}`).checked
+        const response = await fetch(`/api/services/${serviceId}/toggle-active`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            active: active ? 1 : 0
+          }),
+        });
+        if (response.ok) {
+          fetchServices();
+        } else {
+          console.error('<%= __('admin_services__toggle_error') %>');
+        }
+      } catch (error) {
+        console.error('<%= __('admin_services__toggle_error') %>:', error);
+      }
+    }
+
+    // Add new service
+    async function addService() {
+      const form = document.getElementById('addServiceForm');
+      const formData = new FormData(form);
+      const serviceData = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('/api/services', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(serviceData),
+        });
+        if (response.ok) {
+          form.reset();
+          fetchServices();
+        } else {
+          console.error('<%= __('admin_services__add_error') %>');
+        }
+      } catch (error) {
+        console.error('<%= __('admin_services__add_error') %>:', error);
+      }
+    }
+
+    // Open edit modal and populate with service data
+    async function openEditModal(serviceId) {
+      try {
+        const response = await fetch(`/api/services/${serviceId}?populate=pricingPlans`);
+        const service = await response.json();
+        document.getElementById('editServiceId').value = service._id;
+        document.getElementById('editServiceName').value = service.name;
+        document.getElementById('editServiceDescription').value = service.description;
+        document.getElementById('editServiceModal').classList.remove('hidden');
+      } catch (error) {
+        console.error('<%= __('admin_services__fetch_error') %>:', error);
+      }
+    }
+
+    // Update service
+    async function updateService() {
+      const serviceId = document.getElementById('editServiceId').value;
+      const form = document.getElementById('editServiceForm');
+      const formData = new FormData(form);
+      const serviceData = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch(`/api/services/${serviceId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(serviceData),
+        });
+        if (response.ok) {
+          document.getElementById('editServiceModal').classList.add('hidden');
+          fetchServices();
+        } else {
+          console.error('<%= __('admin_services__update_error') %>');
+        }
+      } catch (error) {
+        console.error('<%= __('admin_services__update_error') %>:', error);
+      }
+    }
+
+    // Delete service
+    async function deleteService(serviceId) {
+      if (confirm('<%= __('admin_services__delete_confirm') %>')) {
+        try {
+          const response = await fetch(`/api/services/${serviceId}`, {
+            method: 'DELETE',
+          });
+          if (response.ok) {
+            fetchServices();
+            new Notify({
+              status: 'success',
+              title: '<%= __('admin_services__delete_success_title') %>',
+              text: '<%= __('admin_services__delete_success_message') %>',
+              effect: 'fade',
+              speed: 300,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 1,
+              position: 'x-center-bottom'
+            });
+          } else if (response.status === 409) {
+            const errorData = await response.json();
+            new Notify({
+              status: 'error',
+              title: '<%= __('admin_services__delete_error_title') %>',
+              text: errorData.message || '<%= __('admin_services__delete_error_message') %>',
+              effect: 'fade',
+              speed: 300,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: false,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 3,
+              position: 'x-center-bottom'
+            });
+          } else {
+            throw new Error('<%= __('admin_services__delete_error') %>');
+          }
+        } catch (error) {
+          console.error('<%= __('admin_services__delete_error') %>:', error);
+          new Notify({
+            status: 'error',
+            title: '<%= __('admin_services__error') %>',
+            text: '<%= __('admin_services__delete_unexpected_error') %>',
+            effect: 'fade',
+            speed: 300,
+            showIcon: true,
+            showCloseButton: true,
+            autoclose: false,
+            autotimeout: 3000,
+            gap: 20,
+            distance: 20,
+            type: 3,
+            position: 'x-center-bottom'
+          });
+        }
+      }
+    }
 
 
-// Initial load
-document.addEventListener('DOMContentLoaded', fetchServices);
-</script>
+    // Initial load
+    document.addEventListener('DOMContentLoaded', fetchServices);
+  </script>
 
-<%- include('../partials/layout-public-bottom') %>
+  <%- include('../partials/layout-public-bottom') %>

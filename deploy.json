@@ -1,0 +1,3 @@
+SSH_USER_HOST="javimosch@savoietech.fr"
+REMOTE_BASE_PATH="/home/javimosch/pr"
+PROJECT_NAME="savoietech-stripe"

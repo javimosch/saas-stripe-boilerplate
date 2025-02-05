@@ -10,7 +10,7 @@ function connectMongoDB() {
     throw new Error('MONGO_DBNAME is required');
   }
 
-  mongoose.connect(process.env.MONGO_URI, { 
+  return mongoose.connect(process.env.MONGO_URI, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     dbName: dbName // Specify the database name
